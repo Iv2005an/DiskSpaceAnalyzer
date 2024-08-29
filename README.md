@@ -51,7 +51,7 @@
 ## Save schemes:
 ```
 <path_to_save>/
-	/Raster/<Year>/<Month>/<Day>/<files>
+  /Raster/<Year>/<Month>/<Day>/<files>
   /Vector/<files>
   /Text/<files>
   /Audio/<Album>/<files>
