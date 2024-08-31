@@ -4,7 +4,7 @@ using static DiskSpaceAnalyzerLib.Constants;
 
 namespace DiskSpaceAnalyzerConsole.Services
 {
-    static public class ArgsService
+    public static class ArgsService
     {
         public static Command? Parse(string[] args)
         {
