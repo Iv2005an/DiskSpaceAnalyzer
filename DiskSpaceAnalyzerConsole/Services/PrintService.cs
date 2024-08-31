@@ -23,7 +23,6 @@
                 string extension = extensions[i];
                 s += $"{(i % 10 == 0 ? "\n " : ' ')}{extension}";
             }
-
             PrintWarningMessage($"{s}\n");
         }
     }

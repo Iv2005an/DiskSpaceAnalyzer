@@ -57,10 +57,11 @@ switch (command.CommandName)
         List<string> directoriesPath = await AnalyzedDirectoriesService.GetDirectoriesPaths();
         if (directoriesPath.Count > 0)
         {
-            string analyzed_dirs = "Analyzed directories:";
+            PrintService.PrintSuccessMessage("Analyzed directories:");
+            string analyzed_dirs = "";
             foreach (string path in directoriesPath)
                 analyzed_dirs += $"\n - {path}";
-            Console.WriteLine(analyzed_dirs);
+            PrintService.PrintWarningMessage(analyzed_dirs);
         }
         else PrintService.PrintWarningMessage("Analyzed directories are missing, run `analyze` command");
         break;
