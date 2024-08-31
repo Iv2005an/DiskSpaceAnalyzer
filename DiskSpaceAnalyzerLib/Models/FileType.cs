@@ -7,8 +7,8 @@ public static class FileType
     public static FileTypes GetFileType(string filePath)
     {
         string extension = Path.GetExtension(filePath).Replace(".", null).ToUpper();
-        if (RasterImageExtensions.Contains(extension)) return FileTypes.Raster;
-        else if (VectorImageExtensions.Contains(extension)) return FileTypes.Vector;
+        if (RasterExtensions.Contains(extension)) return FileTypes.Raster;
+        else if (VectorExtensions.Contains(extension)) return FileTypes.Vector;
         else if (TextExtensions.Contains(extension)) return FileTypes.Text;
         else if (AudioExtensions.Contains(extension)) return FileTypes.Audio;
         else if (VideoExtensions.Contains(extension)) return FileTypes.Video;
