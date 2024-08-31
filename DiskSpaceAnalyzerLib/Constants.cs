@@ -35,8 +35,8 @@ public static class Constants
         System,
         Executables,
         Settings,
-        Error,
         Other,
+        Error,
     }
     public static readonly string[] RasterExtensions =
     [
