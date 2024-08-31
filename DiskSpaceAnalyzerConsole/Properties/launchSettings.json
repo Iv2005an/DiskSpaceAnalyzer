@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "DiskSpaceAnalyzerConsole": {
+      "commandName": "Project"
+    },
+    "DiskSpaceAnalyzerConsoleAnalyzedDirs": {
+      "commandName": "Project",
+      "commandLineArgs": "ad"
+    }
+  }
+}
