@@ -2,7 +2,7 @@
 
 ## Command Line
 ### Commands:
-- `help[h]` - show help message
+- `help[h]` - show help message(DEFAULT)
 - `analyzed_dirs[ad]` - show a list of the analyzed directories
 - `categories[c]` - show available file categories and their extensions
 - `analyze[a]` - run directory analysis 

@@ -3,13 +3,16 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35208.52
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiskSpaceAnalyzerLib", "DiskSpaceAnalyzerLib\DiskSpaceAnalyzerLib.csproj", "{57F0F1F2-F857-4CBF-A379-33A0C410FCD8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiskSpaceAnalyzerLib", "DiskSpaceAnalyzerLib\DiskSpaceAnalyzerLib.csproj", "{57F0F1F2-F857-4CBF-A379-33A0C410FCD8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiskSpaceAnalyzerConsole", "DiskSpaceAnalyzerConsole\DiskSpaceAnalyzerConsole.csproj", "{80BC641A-1EF7-474A-B6F6-71EC38408C77}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiskSpaceAnalyzerConsole", "DiskSpaceAnalyzerConsole\DiskSpaceAnalyzerConsole.csproj", "{80BC641A-1EF7-474A-B6F6-71EC38408C77}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiskSpaceAnalyzerTest", "DiskSpaceAnalyzerTest\DiskSpaceAnalyzerTest.csproj", "{AD66A270-06B0-4BBF-A15D-0426EFA31AED}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiskSpaceAnalyzerTest", "DiskSpaceAnalyzerTest\DiskSpaceAnalyzerTest.csproj", "{AD66A270-06B0-4BBF-A15D-0426EFA31AED}"
+	ProjectSection(ProjectDependencies) = postProject
+		{80BC641A-1EF7-474A-B6F6-71EC38408C77} = {80BC641A-1EF7-474A-B6F6-71EC38408C77}
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiskSpaceAnalyzerMauiApp", "DiskSpaceAnalyzerMauiApp\DiskSpaceAnalyzerMauiApp.csproj", "{3F349158-3AB4-443B-8434-9242ED0A3262}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiskSpaceAnalyzerMauiApp", "DiskSpaceAnalyzerMauiApp\DiskSpaceAnalyzerMauiApp.csproj", "{3F349158-3AB4-443B-8434-9242ED0A3262}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
