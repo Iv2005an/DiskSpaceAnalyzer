@@ -14,6 +14,9 @@ public static class AnalyzedDirectoriesDatabase
         Expression<Func<AnalyzedDirectory, bool>> validator) =>
         await Table.Where(validator).ToListAsync();
     public static async Task<int> GetDirectoriesCountAsync() => await Table.CountAsync();
+    public static async Task<int> GetDirectoriesCountAsync(
+        Expression<Func<AnalyzedDirectory, bool>> validator) =>
+        await Table.Where(validator).CountAsync();
     public static async Task AddDirectoryAsync(AnalyzedDirectory directory) =>
         await Connection.InsertAsync(directory);
     public static async Task DeleteDirectoryAsync(
