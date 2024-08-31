@@ -1,7 +1,8 @@
-﻿using SQLite;
+﻿using DiskSpaceAnalyzerLib.Models;
+using SQLite;
 
-namespace DiskSpaceAnalyzerLib.Databases
-{
+namespace DiskSpaceAnalyzerLib.Databases;
+
     internal static class Database
     {
         private static SQLiteAsyncConnection? _connection;
@@ -12,11 +13,10 @@ namespace DiskSpaceAnalyzerLib.Databases
                 if (_connection is null)
                 {
                     _connection = new SQLiteAsyncConnection(Constants.DatabasePath, Constants.Flags);
-                    _connection.CreateTableAsync<Models.AnalyzedFile>().Wait();
+                _connection.CreateTableAsync<AnalyzedFile>().Wait();
                 }
                 return _connection;
             }
         }
 
     }
-}
