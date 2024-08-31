@@ -1,7 +1,21 @@
-﻿namespace DiskSpaceAnalyzerLib
+﻿using SQLite;
+
+namespace DiskSpaceAnalyzerLib
 {
     public static class Constants
     {
+        public const string DatabaseFilename = "DiskSpaceAnalyzerDB.db3";
+        public const SQLiteOpenFlags Flags =
+            SQLiteOpenFlags.ReadWrite |
+            SQLiteOpenFlags.Create |
+            SQLiteOpenFlags.SharedCache;
+        private static string? _databasePath;
+        public static string DatabasePath
+        {
+            get => Path.Combine(_databasePath ?? Environment.CurrentDirectory, DatabaseFilename);
+            set { _databasePath = value; }
+        }
+
         public enum FileTypes
         {
             Raster,
