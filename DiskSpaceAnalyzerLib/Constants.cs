@@ -38,14 +38,14 @@ public static class Constants
         Error,
         Other,
     }
-    public static readonly string[] RasterImageExtensions =
+    public static readonly string[] RasterExtensions =
     [
         "ART", "ARW", "BMP", "CR", "CRW", "DCM", "DDS", "DJVU", "DNG", "EXR", "FPX", "GIF", "ICO", "JPG", "JP",
         "JPEG", "NEF", "ORF", "PCD", "PCX", "PEF", "PGM", "PICT", "PNG", "PSD", "RAF", "SFW", "TGA", "TIFF", "WBMP",
         "XCF", "YUV", "KDC", "PCT", "SR", "TIF", "HDR", "WEBP", "NRW", "PLIST", "ITHMB", "THM", "PSPIMAGE", "MAC",
         "HEIC", "RWL", "FLIF", "AVIF", "RAW", "PICTCLIPPING", "JXR", "CR2"
     ];
-    public static readonly string[] VectorImageExtensions =
+    public static readonly string[] VectorExtensions =
     [
         "EMF", "EPS", "SVG", "WPG", "AI", "SVGZ", "WMF", "ODG", "CDR", "VSD", "STD", "PD", "EMZ", "MIX", "OTG",
         "CVS", "GVDESIGN"
