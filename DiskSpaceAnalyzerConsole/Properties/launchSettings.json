@@ -6,6 +6,10 @@
     "DiskSpaceAnalyzerConsoleAnalyzedDirs": {
       "commandName": "Project",
       "commandLineArgs": "ad"
+    },
+    "DiskSpaceAnalyzerConsoleCategories": {
+      "commandName": "Project",
+      "commandLineArgs": "c"
     }
   }
 }
