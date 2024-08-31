@@ -1,10 +1,10 @@
-﻿using System.Text.RegularExpressions;
+﻿using DiskSpaceAnalyzerConsole.Extensions;
 using static DiskSpaceAnalyzerConsole.Constants;
 using static DiskSpaceAnalyzerLib.Constants;
 
 namespace DiskSpaceAnalyzerConsole.Models;
 
-public partial class Command(Commands commandName,
+public class Command(Commands commandName,
                              bool isRepeat = false,
                              bool isAll = false,
                              bool isAllCategories = false,
@@ -24,20 +24,36 @@ public partial class Command(Commands commandName,
         {
             foreach (Commands command in Enum.GetValues<Commands>())
             {
-                string commandS = command.ToString();
                 if (string.Equals(
-                    WordTranzitionRegex().Replace(commandS, (m) => $"{m.Value[0]}_{m.Value[1]}"),
+                    command.GetName(),
                     commandName,
                     StringComparison.CurrentCultureIgnoreCase)
                     || string.Equals(
-                    string.Concat(commandS.Where(char.IsUpper)),
+                    command.GetShortName(),
                     commandName,
                     StringComparison.CurrentCultureIgnoreCase)) return command;
             }
         }
         return null;
     }
-
-    [GeneratedRegex("[a-z][A-Z]")]
-    private static partial Regex WordTranzitionRegex();
+    public static Parameters? GetParameter(Commands command, string parameterName)
+    {
+        if (!string.IsNullOrEmpty(parameterName))
+        {
+            Parameters[] availableParameters = command.GetParameters();
+            foreach (Parameters parameter in Enum.GetValues<Parameters>())
+            {
+                if (availableParameters.Contains(parameter)
+                    && string.Equals(
+                    parameter.GetName(),
+                    parameterName,
+                    StringComparison.CurrentCultureIgnoreCase)
+                    || string.Equals(
+                    parameter.GetShortName(),
+                    parameterName,
+                    StringComparison.CurrentCultureIgnoreCase)) return parameter;
+            }
+        }
+        return null;
+    }
 }

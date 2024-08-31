@@ -23,27 +23,28 @@ public static class ArgsService
         List<FileTypes> categories = [];
         List<string> paths = [];
 
-        bool commandWithParameters = COMMANDS_WITH_PARAMETERS.Contains(command);
+        bool commandWithParameters = commandsWithParameters.Contains(command);
         foreach (string arg in args[1..])
         {
             if (arg.StartsWith('-'))
             {
                 if (commandWithParameters)
                 {
-                    if (AVAILABLE_PARAMETERS[0..2].Contains(arg))
+                    switch (Command.GetParameter(command, arg))
                     {
-                        isRepeat = true;
-                        continue;
-                    }
-                    else if (AVAILABLE_PARAMETERS[2..4].Contains(arg))
-                    {
-                        isAll = true;
-                        continue;
-                    }
-                    else if (command == Commands.Sort && AVAILABLE_PARAMETERS[4..6].Contains(arg))
-                    {
-                        isAllCategories = true;
-                        continue;
+                        case Parameters.All:
+                            isAll = true;
+                            continue;
+                        case Parameters.Repeat:
+                            isRepeat = true;
+                            continue;
+                        case Parameters.AllCategories:
+                            if (command == Commands.Sort)
+                            {
+                                isAllCategories = true;
+                                continue;
+                            }
+                            break;
                     }
                 }
                 PrintService.PrintErrorMessage($"Invalid named parameter: `{arg}`\n");
