@@ -2,7 +2,7 @@
 
 ## Command Line
 ### Commands:
-- `help[h]` - show help message
+- `help[h]` - show help message(DEFAULT)
 - `analyzed_dirs[ad]` - show a list of the analyzed directories
 - `categories[c]` - show available file categories and their extensions
 - `analyze[a]` - run directory analysis 
@@ -51,7 +51,7 @@
 ## Save schemes:
 ```
 <path_to_save>/
-	/Raster/<Year>/<Month>/<Day>/<files>
+  /Raster/<Year>/<Month>/<Day>/<files>
   /Vector/<files>
   /Text/<files>
   /Audio/<Album>/<files>
