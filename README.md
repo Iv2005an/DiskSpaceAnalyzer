@@ -24,7 +24,6 @@
       - Text
       - Audio
       - Video
-      - Film
       - EBook
       - CAD
       - Presentation
@@ -56,7 +55,6 @@
   /Text/<files>
   /Audio/<Album>/<files>
   /Video/<Year>/<Month>/<Day>/<files>
-  /Film/<files>
   /EBook/<files>
   /CAD/<files>
   /Presentation/<files>
