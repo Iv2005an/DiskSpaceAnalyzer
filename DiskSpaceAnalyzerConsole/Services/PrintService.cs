@@ -1,4 +1,5 @@
 ﻿using DiskSpaceAnalyzerConsole.Extensions;
+using DiskSpaceAnalyzerLib.Extensions;
 using static DiskSpaceAnalyzerConsole.Constants;
 using static DiskSpaceAnalyzerLib.Constants;
 
@@ -18,16 +19,24 @@ internal static class PrintService
     public static void PrintWarningMessage(string message) => PrintMessage(message, ConsoleColor.Yellow);
     public static void PrintErrorMessage(string message) => PrintMessage(message, ConsoleColor.Red);
 
-    public static void PrintCategoryInfo(string name, string[] extensions)
+    public static void PrintCategoriesInfo()
     {
-        PrintInfoMessage($"\n{name}:");
-        string s = "";
-        for (int i = 0; i < extensions.Length; i++)
+        PrintSuccessMessage("Available categories for analysis:\n");
+        foreach (FileTypes category in Enum.GetValues<FileTypes>())
         {
-            string extension = extensions[i];
-            s += $"{(i % 10 == 0 ? "\n " : ' ')}{extension}";
+            if (category != FileTypes.Other && category != FileTypes.Error)
+            {
+                PrintInfoMessage($"\n{category}:");
+                string s = "";
+                string[] extensions = category.GetExtensions();
+                for (int i = 0; i < extensions.Length; i++)
+                {
+                    string extension = extensions[i];
+                    s += $"{(i % 10 == 0 ? "\n " : ' ')}{extension}";
+                }
+                PrintWarningMessage($"{s}\n");
+            }
         }
-        PrintWarningMessage($"{s}\n");
     }
     public static void PrintCommandsDescriptions()
     {
