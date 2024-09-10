@@ -22,4 +22,7 @@ switch (command.CommandName)
     case Commands.Info:
         await ProgramService.Info(command);
         break;
+    case Commands.Sort:
+        await ProgramService.Sort(command);
+        break;
 }

@@ -1,5 +1,7 @@
 ﻿using DiskSpaceAnalyzerConsole.Models;
-﻿using DiskSpaceAnalyzerLib.Services;
+using DiskSpaceAnalyzerLib.Databases;
+using DiskSpaceAnalyzerLib.Models;
+using DiskSpaceAnalyzerLib.Services;
 
 namespace DiskSpaceAnalyzerConsole.Services;
 
@@ -42,5 +44,22 @@ internal static class ProgramService
         PrintService.PrintAnalyzedCategoriesInfo(command.IsAll
             ? await AnalyzedFilesService.GetInfo()
             : await AnalyzedFilesService.GetInfo(command.SourcePaths));
+    }
+    public static async Task Sort(Command command)
+    {
+        await Analyze(command);
+        PrintService.PrintInfoMessage($"Start sorting\n");
+        List<AnalyzedFile> filesToSort = [];
+        if (command.IsAll)
+            filesToSort = await AnalyzedFilesDatabase.GetFilesAsync(
+                f => command.Categories.Contains(f.Type));
+        else
+            foreach (string path in command.SourcePaths)
+                filesToSort.AddRange(await AnalyzedFilesDatabase.GetFilesAsync(
+                    f => command.Categories.Contains(f.Type) && f.DirectoryPath.StartsWith(path)));
+        CatalogService.Sort(filesToSort,
+                            command.PathToSave,
+                            onException: (f, e) => PrintService.PrintErrorMessage($"{e.Message}\n"));
+        PrintService.PrintCompletedMessage();
     }
 }

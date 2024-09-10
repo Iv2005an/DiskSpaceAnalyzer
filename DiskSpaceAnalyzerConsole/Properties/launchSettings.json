@@ -23,6 +23,9 @@
       "commandName": "Project",
       "commandLineArgs": "i E:\\"
     },
+    "DiskSpaceAnalyzerConsoleSort": {
+      "commandName": "Project",
+      "commandLineArgs": "s raster E:\\ D:\\"
     }
   }
 }
