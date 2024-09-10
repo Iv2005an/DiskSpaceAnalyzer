@@ -42,7 +42,7 @@ public static class Constants
         [
             "ART", "ARW", "BMP", "CR", "CRW", "DCM", "DDS", "DJVU", "DNG", "EXR", "FPX", "GIF", "ICO", "JPG", "JP",
             "JPEG", "NEF", "ORF", "PCD", "PCX", "PEF", "PGM", "PICT", "PNG", "PSD", "RAF", "SFW", "TGA", "TIFF", "WBMP",
-            "XCF", "YUV", "KDC", "PCT", "SR", "TIF", "HDR", "WEBP", "NRW", "PLIST", "ITHMB", "THM", "PSPIMAGE", "MAC",
+            "XCF", "YUV", "KDC", "PCT", "SR", "TIF", "HDR", "WEBP", "NRW", "ITHMB", "THM", "PSPIMAGE", "MAC",
             "HEIC", "RWL", "FLIF", "AVIF", "RAW", "PICTCLIPPING", "JXR", "CR2"
         ],
         [
@@ -84,7 +84,7 @@ public static class Constants
             "CFM", "CSR", "JSP", "RSS", "CFML", "MHTML", "WEBARCHIVE"
         ],
         [
-            "RC", "P", "D", "C", "CLASS", "CPP", "CS", "DTD", "FLA", "H", "JAVA", "LUA", "M", "PL", "PY", "SH", "SLN",
+            "RC", "P", "D", "C", "CLASS", "CPP", "CS", "DTD", "FLA", "H", "JAVA", "LUA", "M", "PL", "PLIST", "PY", "SH", "SLN",
             "SWIFT", "VCXPROJ", "XCODEPROJ", "ASC", "BAS", "ASM", "CBL", "VBP", "IWB", "PB", "YML", "PIKA", "S19", "XT",
             "SUO", "FSPROJ", "PBJ", "PBXUSER", "PYW", "XQ", "CD", "SB", "SB2", "ISE", "KV", "COD", "NIB", "PWN", "B",
             "HPP", "APA", "BET", "BLUEJ", "ERB", "FXC", "M4", "OWL", "SMA", "TRX", "VC", "DEF", "XAP", "O", "PAS", "QPR",
