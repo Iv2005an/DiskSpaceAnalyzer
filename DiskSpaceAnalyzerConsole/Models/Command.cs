@@ -8,15 +8,17 @@ public class Command(Commands commandName,
                              bool isRepeat = false,
                              bool isAll = false,
                              bool isAllCategories = false,
-                             List<string>? paths = null,
-                             List<FileTypes>? categories = null)
+                             List<string>? sourcePaths = null,
+                             List<FileTypes>? categories = null,
+                             string? pathToSave = null)
 {
     public Commands CommandName => commandName;
     public bool IsRepeat => isRepeat;
     public bool IsAll => isAll;
     public bool IsAllCategories => isAllCategories;
-    public List<string> Paths => paths ?? [];
+    public List<string> SourcePaths => sourcePaths ?? [];
     public List<FileTypes> Categories => categories ?? [];
+    public string PathToSave => pathToSave ?? "";
 
     public static Commands? GetCommand(string commandName)
     {

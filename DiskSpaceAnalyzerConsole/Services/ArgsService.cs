@@ -21,7 +21,8 @@ public static class ArgsService
         bool isAll = false;
         bool isAllCategories = false;
         List<FileTypes> categories = [];
-        List<string> paths = [];
+        List<string> sourcePaths = [];
+        string pathToSave = "";
 
         bool commandWithParameters = commandsWithParameters.Contains(command);
         foreach (string arg in args[1..])
@@ -75,7 +76,7 @@ public static class ArgsService
                     string fullPath = Path.GetFullPath(arg);
                     if (Directory.Exists(fullPath))
                     {
-                        paths.Add(fullPath);
+                        sourcePaths.Add(fullPath);
                         continue;
                     }
                 }
@@ -85,15 +86,22 @@ public static class ArgsService
         }
         if (command == Commands.Sort)
         {
-            if (paths.Count == 0)
+            if (sourcePaths.Count == 0)
             {
                 PrintService.PrintErrorMessage($"Path to saving directory is required");
                 return null;
             }
-            else if (paths.Count == 1) isAll = true;
-            if (categories.Count == 0) isAllCategories = true;
+            else if (sourcePaths.Count == 1) isAll = true;
+            if (categories.Count == 0)
+            {
+                isAllCategories = true;
+                FileTypes[] allCategories = Enum.GetValues<FileTypes>();
+                categories = [.. allCategories[..(allCategories.Length - 1)]];
+            }
+            pathToSave = sourcePaths.Last();
+            sourcePaths = sourcePaths[..(sourcePaths.Count - 1)];
         }
-        else if (commandWithParameters && paths.Count == 0) isAll = true;
-        return new Command(command, isRepeat, isAll, isAllCategories, paths, categories);
+        else if (commandWithParameters && sourcePaths.Count == 0) isAll = true;
+        return new Command(command, isRepeat, isAll, isAllCategories, sourcePaths, categories, pathToSave);
     }
 }
