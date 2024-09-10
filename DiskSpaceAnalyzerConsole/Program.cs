@@ -16,4 +16,7 @@ switch (command.CommandName)
     case Commands.Categories:
         ProgramService.Categories();
         break;
+    case Commands.Analyze:
+        await ProgramService.Analyze(command);
+        break;
 }

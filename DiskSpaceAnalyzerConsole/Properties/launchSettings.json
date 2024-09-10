@@ -10,6 +10,15 @@
     "DiskSpaceAnalyzerConsoleCategories": {
       "commandName": "Project",
       "commandLineArgs": "c"
+    },
+    "DiskSpaceAnalyzerConsoleAnalyzeAll": {
+      "commandName": "Project",
+      "commandLineArgs": "a"
+    },
+    "DiskSpaceAnalyzerConsoleAnalyze": {
+      "commandName": "Project",
+      "commandLineArgs": "a \"E:\\Nero Autobackup\\20131014_124838_Local Autobackup\" \"E:\\Nero Autobackup\\20130917_124843_Local Autobackup\""
+    },
     }
   }
 }

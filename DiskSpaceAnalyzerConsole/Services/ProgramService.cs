@@ -1,3 +1,4 @@
+﻿using DiskSpaceAnalyzerConsole.Models;
 ﻿using DiskSpaceAnalyzerLib.Services;
 
 namespace DiskSpaceAnalyzerConsole.Services;
@@ -18,4 +19,21 @@ internal static class ProgramService
         else PrintService.PrintWarningMessage("Analyzed directories are missing, run `analyze` command");
     }
     public static void Categories() => PrintService.PrintCategoriesInfo();
+    public static async Task Analyze(Command command)
+    {
+        if (command.IsAll)
+        {
+            command.SourcePaths.AddRange(await AnalyzedDirectoriesService.GetDirectoriesPaths());
+            PrintService.PrintInfoMessage($"Start analysis\n");
+        }
+        foreach (string path in command.SourcePaths)
+        {
+            if (!command.IsAll) PrintService.PrintInfoMessage($"Start analysis: {path}\n");
+            await AnalyzedDirectoriesService.Analyze(
+                path, command.IsRepeat,
+                new Progress<string>((path) => PrintService.PrintWarningMessage($"{path}\n")));
+            if (!command.IsAll) PrintService.PrintCompletedMessage();
+        }
+        if (command.IsAll) PrintService.PrintCompletedMessage();
+    }
 }
