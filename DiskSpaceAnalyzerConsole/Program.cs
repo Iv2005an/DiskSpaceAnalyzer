@@ -19,4 +19,7 @@ switch (command.CommandName)
     case Commands.Analyze:
         await ProgramService.Analyze(command);
         break;
+    case Commands.Info:
+        await ProgramService.Info(command);
+        break;
 }

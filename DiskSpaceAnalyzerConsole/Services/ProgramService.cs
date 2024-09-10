@@ -36,4 +36,11 @@ internal static class ProgramService
         }
         if (command.IsAll) PrintService.PrintCompletedMessage();
     }
+    public static async Task Info(Command command)
+    {
+        await Analyze(command);
+        PrintService.PrintAnalyzedCategoriesInfo(command.IsAll
+            ? await AnalyzedFilesService.GetInfo()
+            : await AnalyzedFilesService.GetInfo(command.SourcePaths));
+    }
 }
