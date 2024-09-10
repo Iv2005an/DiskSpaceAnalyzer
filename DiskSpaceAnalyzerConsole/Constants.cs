@@ -8,7 +8,7 @@ public static class Constants
         AnalyzedDirs,
         Categories,
         Analyze,
-        Percentages,
+        Info,
         Sort,
     }
     public enum Parameters
@@ -27,7 +27,7 @@ public static class Constants
     public static readonly Commands[] commandsWithParameters =
     [
         Commands.Analyze,
-        Commands.Percentages,
+        Commands.Info,
         Commands.Sort,
     ];
     public static readonly string[] commandsDescriptions =
@@ -36,7 +36,7 @@ public static class Constants
         "show a list of the analyzed directories",
         "show available file categories and their extensions",
         "run a directory analysis",
-        "show a percentage of the categories in the analyzed directories",
+        "show information about the analyzed directories",
         "sort the data and save it",
     ];
     public static readonly string[] parametersDescriptions =
@@ -53,7 +53,7 @@ public static class Constants
     ];
     public static readonly string[] positionalParametersDescriptions =
     [
-        "paths to directories for analysis, herewith --all[-a] is not DEFAULT",
+        "paths to source directories, herewith --all[-a] is not DEFAULT",
         "select categories for sorting.\n    Available categories:",
         "path to directory for saving sorted data(REQUIRED)",
     ];
