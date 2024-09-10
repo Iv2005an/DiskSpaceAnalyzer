@@ -1,5 +1,6 @@
 ﻿using DiskSpaceAnalyzerConsole.Extensions;
 using DiskSpaceAnalyzerLib.Extensions;
+using DiskSpaceAnalyzerLib.Models;
 using static DiskSpaceAnalyzerConsole.Constants;
 using static DiskSpaceAnalyzerLib.Constants;
 
@@ -79,4 +80,11 @@ internal static class PrintService
         PrintInfoMessage(
             "For more information: https://github.com/Iv2005an/DiskSpaceAnalyzer/");
     }
+    public static void PrintAnalyzedCategoriesInfo(List<CategoryInfo> categoriesInfo)
+    {
+        foreach (CategoryInfo categoryInfo in categoriesInfo)
+            PrintWarningMessage(
+                $"{categoryInfo.Category}: {categoryInfo.FilesCount} ({categoryInfo.Percentages:P2})\n");
+    }
+    public static void PrintCompletedMessage() => PrintSuccessMessage("COMPLETED\n");
 }
