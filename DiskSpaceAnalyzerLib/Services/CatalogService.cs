@@ -28,7 +28,7 @@ public static class CatalogService
                 for (int i = 1; ; i++)
                 {
                     newFilePath = $"{Path.Combine(newFilePathDirectory,
-                        Path.GetFileNameWithoutExtension(newFilePath))}({i}){Path.GetExtension(newFilePath)}";
+                        Path.GetFileNameWithoutExtension(sourceFilePath))}({i}){Path.GetExtension(sourceFilePath)}";
                     if (!File.Exists(newFilePath)) break;
                     if (CompareFiles(sourceFilePath, newFilePath)) return null;
                 }
@@ -47,17 +47,17 @@ public static class CatalogService
             AnalyzedFile file = filesToSort[i - 1];
             string filePath = Path.Combine(file.DirectoryPath, file.Name);
             string newFilePathDirectory = Path.Combine(pathToSave, "DataSpaceAnalyzerSortedData", file.Type.ToString());
-            string? newFilePath = GetNewFilePath(newFilePathDirectory, filePath);
-            if (newFilePath is not null)
+            try
             {
-                try
+                string? newFilePath = GetNewFilePath(newFilePathDirectory, filePath);
+                if (newFilePath is not null)
                 {
                     File.Copy(filePath, newFilePath);
                     onSuccessCopy?.Invoke(file, i, newFilePath);
                 }
-                catch (Exception ex) { onException?.Invoke(file, i, filePath, ex); }
+                else onDuplicate?.Invoke(file, i, filePath);
             }
-            else onDuplicate?.Invoke(file, i, filePath);
+            catch (Exception ex) { onException?.Invoke(file, i, filePath, ex); }
         }
     }
 }
