@@ -28,7 +28,7 @@ public static class CatalogService
                 for (int i = 1; ; i++)
                 {
                     newFilePath = $"{Path.Combine(newFilePathDirectory,
-                        Path.GetFileNameWithoutExtension(newFilePath))}({i}){Path.GetExtension(newFilePath)}";
+                        Path.GetFileNameWithoutExtension(sourceFilePath))}({i}){Path.GetExtension(sourceFilePath)}";
                     if (!File.Exists(newFilePath)) break;
                     if (CompareFiles(sourceFilePath, newFilePath)) return null;
                 }
