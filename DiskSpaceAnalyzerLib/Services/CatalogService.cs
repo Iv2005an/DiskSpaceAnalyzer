@@ -38,12 +38,13 @@ public static class CatalogService
         return newFilePath;
     }
     public static void Sort(List<AnalyzedFile> filesToSort, string pathToSave,
-        Action<AnalyzedFile, string>? onSuccessCopy = null,
-        Action<AnalyzedFile, string>? onDuplicate = null,
-        Action<AnalyzedFile, Exception>? onException = null)
+        Action<AnalyzedFile, int, string>? onSuccessCopy = null,
+        Action<AnalyzedFile, int, string>? onDuplicate = null,
+        Action<AnalyzedFile, int, string, Exception>? onException = null)
     {
-        foreach (AnalyzedFile file in filesToSort)
+        for (int i = 1; i < filesToSort.Count + 1; i++)
         {
+            AnalyzedFile file = filesToSort[i - 1];
             string filePath = Path.Combine(file.DirectoryPath, file.Name);
             string newFilePathDirectory = Path.Combine(pathToSave, "DataSpaceAnalyzerSortedData", file.Type.ToString());
             string? newFilePath = GetNewFilePath(newFilePathDirectory, filePath);
@@ -52,11 +53,11 @@ public static class CatalogService
                 try
                 {
                     File.Copy(filePath, newFilePath);
-                    onSuccessCopy?.Invoke(file, newFilePath);
+                    onSuccessCopy?.Invoke(file, i, newFilePath);
                 }
-                catch (Exception ex) { onException?.Invoke(file, ex); }
+                catch (Exception ex) { onException?.Invoke(file, i, filePath, ex); }
             }
-            else onDuplicate?.Invoke(file, newFilePathDirectory);
+            else onDuplicate?.Invoke(file, i, filePath);
         }
     }
 }
