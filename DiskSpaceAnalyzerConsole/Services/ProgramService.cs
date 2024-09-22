@@ -57,9 +57,15 @@ internal static class ProgramService
             foreach (string path in command.SourcePaths)
                 filesToSort.AddRange(await AnalyzedFilesDatabase.GetFilesAsync(
                     f => command.Categories.Contains(f.Type) && f.DirectoryPath.StartsWith(path)));
-        CatalogService.Sort(filesToSort,
-                            command.PathToSave,
-                            onException: (f, e) => PrintService.PrintErrorMessage($"{e.Message}\n"));
+        CatalogService.Sort(
+            filesToSort,
+            command.PathToSave,
+            onSuccessCopy: (f, i, np) => PrintService.PrintSuccessMessage(
+                $"SUCCESS {i}/{filesToSort.Count} {(float)i / filesToSort.Count:P2} {np}\n"),
+            onDuplicate: (f, i, p) => PrintService.PrintWarningMessage(
+                $"DUPLICATE {i}/{filesToSort.Count} {(float)i / filesToSort.Count:P2} {p}\n"),
+            onException: (f, i, p, e) => PrintService.PrintErrorMessage(
+                $"ERROR {i}/{filesToSort.Count} {(float)i / filesToSort.Count:P2} {p} {e}\n"));
         PrintService.PrintCompletedMessage();
     }
 }
