@@ -1,11 +1,11 @@
-using static DiskSpaceAnalyzerConsole.Constants;
+﻿using static DiskSpaceAnalyzerConsole.Constants;
 
 namespace DiskSpaceAnalyzerConsole.Extensions;
 
 internal static class CommandsExtension
 {
     public static string GetName(this Commands command) =>
-        Regexs.WordTranzitionRegex().Replace(
+        Regexps.WordTransitionRegex().Replace(
         $"{command}", m => $"{m.Value[0]}_{m.Value[1]}").ToLower();
     public static string GetShortName(this Commands command)
     {

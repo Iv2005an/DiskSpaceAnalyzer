@@ -2,8 +2,8 @@
 
 namespace DiskSpaceAnalyzerConsole;
 
-internal static partial class Regexs
+internal static partial class Regexps
 {
     [GeneratedRegex(@"[a-z][A-Z]")]
-    public static partial Regex WordTranzitionRegex();
+    public static partial Regex WordTransitionRegex();
 }

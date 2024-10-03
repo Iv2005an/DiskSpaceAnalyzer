@@ -5,7 +5,7 @@ namespace DiskSpaceAnalyzerConsole.Extensions;
 internal static class ParametersExtension
 {
     public static string GetName(this Parameters parameter) =>
-        Regexs.WordTranzitionRegex().Replace(
+        Regexps.WordTransitionRegex().Replace(
         $"--{parameter}", m => $"{m.Value[0]}_{m.Value[1]}").ToLower();
     public static string GetShortName(this Parameters parameter)
     {
