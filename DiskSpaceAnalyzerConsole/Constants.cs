@@ -5,7 +5,6 @@ public static class Constants
     public enum Commands
     {
         Help,
-        AnalyzedDirs,
         Categories,
         Analyze,
         Info,
@@ -13,15 +12,15 @@ public static class Constants
     }
     public enum Parameters
     {
-        All,
         Repeat,
-        AllCategories,
+        Ignore,
     }
     public enum PositionalParameters
     {
-        Paths,
+        SourcePaths,
+        IgnorePaths,
         Categories,
-        PathToSave,
+        SavePath,
     }
 
     public static readonly Commands[] commandsWithParameters =
@@ -33,7 +32,6 @@ public static class Constants
     public static readonly string[] commandsDescriptions =
     [
         "show a help message(DEFAULT)",
-        "show a list of the analyzed directories",
         "show available file categories and their extensions",
         "run a directory analysis",
         "show information about the analyzed directories",
@@ -41,20 +39,21 @@ public static class Constants
     ];
     public static readonly string[] parametersDescriptions =
     [
-        "use analyzed directories(DEFAULT)",
         "re-analysis of the analyzed directories",
-        "use all categories(DEFAULT)",
+        "next paths after this flag will be ignored"
     ];
     public static readonly string[] positionalParameters =
     [
-        "<path_0> <path_1> ... <path_n>",
+        "<source_path_0> <source_path_1> ... <source_path_n>",
+        "<ignore_path_0> <ignore_path_1> ... <ignore_path_n>",
+        "<save_path>",
         "<category_1 category_2 ... category_n>",
-        "<path_to_save>",
     ];
     public static readonly string[] positionalParametersDescriptions =
     [
-        "paths to source directories, herewith --all[-a] is not DEFAULT",
-        "select categories for sorting.\n    Available categories:",
-        "path to directory for saving sorted data(REQUIRED)",
+        "paths to source directories(REQUIRED)",
+        "paths to directories for ignoring",
+        "last path before ignore flag will be defined as path to directory for saving sorted data(REQUIRED)",
+        "select categories for sorting.(By default all categories)\n    Available categories:",
     ];
 }

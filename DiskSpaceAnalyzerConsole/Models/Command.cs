@@ -9,6 +9,7 @@ public class Command(Commands commandName,
                              bool isAll = false,
                              bool isAllCategories = false,
                              List<string>? sourcePaths = null,
+                             List<string>? ignorePaths = null,
                              List<FileTypes>? categories = null,
                              string? pathToSave = null)
 {
@@ -17,6 +18,7 @@ public class Command(Commands commandName,
     public bool IsAll => isAll;
     public bool IsAllCategories => isAllCategories;
     public List<string> SourcePaths => sourcePaths ?? [];
+    public List<string> IgnorePaths => ignorePaths ?? [];
     public List<FileTypes> Categories => categories ?? [];
     public string PathToSave => pathToSave ?? "";
 

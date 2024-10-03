@@ -66,7 +66,7 @@ internal static class PrintService
             {
                 PrintSuccessMessage($"  `{parameter.GetName()}`");
                 PrintWarningMessage($" - {parameter.GetDescription()}");
-                if ((int)parameter == 1)
+                if ((int)parameter == 3)
                 {
                     string s = "";
                     FileTypes[] categories = Enum.GetValues<FileTypes>();
@@ -78,7 +78,7 @@ internal static class PrintService
             }
         }
         PrintInfoMessage(
-            "For more information: https://github.com/Iv2005an/DiskSpaceAnalyzer/");
+            "For more information: https://github.com/Iv2005an/DiskSpaceAnalyzer/\n");
     }
     public static void PrintAnalyzedCategoriesInfo(List<CategoryInfo> categoriesInfo)
     {

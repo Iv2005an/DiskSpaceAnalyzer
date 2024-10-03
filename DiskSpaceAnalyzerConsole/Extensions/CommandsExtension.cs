@@ -1,4 +1,4 @@
-﻿using static DiskSpaceAnalyzerConsole.Constants;
+using static DiskSpaceAnalyzerConsole.Constants;
 
 namespace DiskSpaceAnalyzerConsole.Extensions;
 
@@ -17,11 +17,11 @@ internal static class CommandsExtension
     public static string GetDescription(this Commands command) =>
         commandsDescriptions[(int)command];
     public static Parameters[] GetParameters(this Commands command) =>
-        (int)command < 3
-        ? [] : (int)command == 5
-        ? Enum.GetValues<Parameters>() : [Parameters.All, Parameters.Repeat];
+        (int)command < 2
+        ? [] : Enum.GetValues<Parameters>();
     public static PositionalParameters[] GetPositionalParameters(this Commands command) =>
-        (int)command < 3
-        ? [] : (int)command == 5
-        ? Enum.GetValues<PositionalParameters>() : [PositionalParameters.Paths];
+        (int)command < 2
+        ? [] : (int)command == 4
+        ? Enum.GetValues<PositionalParameters>()
+        : [PositionalParameters.SourcePaths, PositionalParameters.IgnorePaths];
 }

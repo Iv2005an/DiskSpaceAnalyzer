@@ -18,10 +18,12 @@ public static class ArgsService
 
         Commands command = (Commands)c;
         bool isRepeat = false;
+        bool isIgnore = false;
         bool isAll = false;
         bool isAllCategories = false;
         List<FileTypes> categories = [];
         List<string> sourcePaths = [];
+        List<string> ignorePaths = [];
         string pathToSave = "";
 
         bool commandWithParameters = commandsWithParameters.Contains(command);
@@ -33,19 +35,12 @@ public static class ArgsService
                 {
                     switch (Command.GetParameter(command, arg))
                     {
-                        case Parameters.All:
-                            isAll = true;
-                            continue;
                         case Parameters.Repeat:
                             isRepeat = true;
                             continue;
-                        case Parameters.AllCategories:
-                            if (command == Commands.Sort)
-                            {
-                                isAllCategories = true;
-                                continue;
-                            }
-                            break;
+                        case Parameters.Ignore:
+                            isIgnore = true;
+                            continue;
                     }
                 }
                 PrintService.PrintErrorMessage($"Invalid named parameter: `{arg}`\n");
@@ -76,7 +71,8 @@ public static class ArgsService
                     string fullPath = Path.GetFullPath(arg);
                     if (Directory.Exists(fullPath))
                     {
-                        sourcePaths.Add(fullPath);
+                        if (isIgnore) ignorePaths.Add(fullPath);
+                        else sourcePaths.Add(fullPath);
                         continue;
                     }
                 }
@@ -91,7 +87,11 @@ public static class ArgsService
                 PrintService.PrintErrorMessage($"Path to saving directory is required");
                 return null;
             }
-            else if (sourcePaths.Count == 1) isAll = true;
+            else if (sourcePaths.Count == 1)
+            {
+                PrintService.PrintErrorMessage($"Source path is required");
+                return null;
+            }
             if (categories.Count == 0)
             {
                 isAllCategories = true;
@@ -102,6 +102,6 @@ public static class ArgsService
             sourcePaths = sourcePaths[..(sourcePaths.Count - 1)];
         }
         else if (commandWithParameters && sourcePaths.Count == 0) isAll = true;
-        return new Command(command, isRepeat, isAll, isAllCategories, sourcePaths, categories, pathToSave);
+        return new Command(command, isRepeat, isAll, isAllCategories, sourcePaths, ignorePaths, categories, pathToSave);
     }
 }

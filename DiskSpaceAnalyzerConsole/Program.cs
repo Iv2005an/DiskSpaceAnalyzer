@@ -10,9 +10,6 @@ switch (command.CommandName)
     case Commands.Help:
         ProgramService.Help();
         break;
-    case Commands.AnalyzedDirs:
-        await ProgramService.AnalyzedDirs();
-        break;
     case Commands.Categories:
         ProgramService.Categories();
         break;
