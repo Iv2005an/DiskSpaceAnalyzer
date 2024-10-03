@@ -19,8 +19,6 @@ public static class ArgsService
         Commands command = (Commands)c;
         bool isRepeat = false;
         bool isIgnore = false;
-        bool isAll = false;
-        bool isAllCategories = false;
         List<FileTypes> categories = [];
         List<string> sourcePaths = [];
         List<string> ignorePaths = [];
@@ -63,7 +61,6 @@ public static class ArgsService
                         }
                         if (category is not null)
                         {
-                            if (isAllCategories) continue;
                             categories.Add((FileTypes)category);
                             continue;
                         }
@@ -94,14 +91,17 @@ public static class ArgsService
             }
             if (categories.Count == 0)
             {
-                isAllCategories = true;
                 FileTypes[] allCategories = Enum.GetValues<FileTypes>();
                 categories = [.. allCategories[..(allCategories.Length - 1)]];
             }
             pathToSave = sourcePaths.Last();
             sourcePaths = sourcePaths[..(sourcePaths.Count - 1)];
         }
-        else if (commandWithParameters && sourcePaths.Count == 0) isAll = true;
-        return new Command(command, isRepeat, isAll, isAllCategories, sourcePaths, ignorePaths, categories, pathToSave);
+        else if (commandWithParameters && sourcePaths.Count == 0)
+        {
+            PrintService.PrintErrorMessage($"Source path is required");
+            return null;
+        }
+        return new Command(command, isRepeat, sourcePaths, pathToSave, ignorePaths, categories);
     }
 }

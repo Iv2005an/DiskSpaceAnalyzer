@@ -6,21 +6,17 @@ namespace DiskSpaceAnalyzerConsole.Models;
 
 public class Command(Commands commandName,
                              bool isRepeat = false,
-                             bool isAll = false,
-                             bool isAllCategories = false,
                              List<string>? sourcePaths = null,
+                             string? pathToSave = null,
                              List<string>? ignorePaths = null,
-                             List<FileTypes>? categories = null,
-                             string? pathToSave = null)
+                             List<FileTypes>? categories = null)
 {
     public Commands CommandName => commandName;
     public bool IsRepeat => isRepeat;
-    public bool IsAll => isAll;
-    public bool IsAllCategories => isAllCategories;
     public List<string> SourcePaths => sourcePaths ?? [];
+    public string PathToSave => pathToSave ?? "";
     public List<string> IgnorePaths => ignorePaths ?? [];
     public List<FileTypes> Categories => categories ?? [];
-    public string PathToSave => pathToSave ?? "";
 
     public static Commands? GetCommand(string commandName)
     {
