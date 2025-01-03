@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\DiskSpaceAnalyzerConsole\DiskSpaceAnalyzerConsole.csproj" />
     <ProjectReference Include="..\DiskSpaceAnalyzerLib\DiskSpaceAnalyzerLib.csproj" />
   </ItemGroup>
 
