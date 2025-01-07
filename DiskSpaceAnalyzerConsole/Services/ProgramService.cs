@@ -5,7 +5,7 @@ namespace DiskSpaceAnalyzerConsole.Services;
 
 internal static class ProgramService
 {
-    public static void Categories() => throw new NotImplementedException();
+    public static void Categories() => PrintService.PrintCategories();
 
     public static async Task Analyze(
         List<DirectoryInfo> sourceDirs, List<DirectoryInfo> ignoreDirs,

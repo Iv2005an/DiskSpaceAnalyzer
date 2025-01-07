@@ -18,24 +18,20 @@ internal static class PrintService
     public static void PrintWarningMessage(string message) => PrintMessage(message, ConsoleColor.Yellow);
     public static void PrintErrorMessage(string message) => PrintMessage(message, ConsoleColor.Red);
 
-    public static void PrintCategoriesInfo()
+    public static void PrintCategories()
     {
         PrintSuccessMessage("Available categories for analysis:\n");
-        foreach (FileTypes category in Enum.GetValues<FileTypes>())
+        var categories = Enum.GetValues<FileTypes>();
+        foreach (FileTypes category in categories[..(categories.Length - 2)])
         {
-            if (category != FileTypes.Other && category != FileTypes.Error)
-            {
-                PrintInfoMessage($"\n{category}:");
-                string s = "";
-                string[] extensions = category.GetExtensions();
-                for (int i = 0; i < extensions.Length; i++)
-                {
-                    string extension = extensions[i];
-                    s += $"{(i % 10 == 0 ? "\n " : ' ')}{extension}";
-                }
-                PrintWarningMessage($"{s}\n");
-            }
+            PrintInfoMessage($"\n{category}:");
+            string s = "";
+            foreach (string extension in category.GetExtensions())
+                s += $" {extension}";
+            PrintWarningMessage($"{s}\n");
+        }
     }
+
     public static void PrintAnalyzedCategoriesInfo(List<CategoryInfo> categoriesInfo)
     {
         foreach (CategoryInfo categoryInfo in categoriesInfo)
