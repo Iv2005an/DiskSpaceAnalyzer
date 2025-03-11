@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 
 namespace DiskSpaceAnalyzerLib.Databases;
 
-public static class AnalyzedDirectoriesDatabase
+public static class DirectoryDatabase
 {
     private static SQLiteAsyncConnection Connection => Database.Connection;
     private static AsyncTableQuery<AnalyzedDirectory> Table => Connection.Table<AnalyzedDirectory>();
@@ -19,7 +19,7 @@ public static class AnalyzedDirectoriesDatabase
         await Table.Where(validator).CountAsync();
     public static async Task AddDirectoryAsync(AnalyzedDirectory directory) =>
         await Connection.InsertAsync(directory);
-    public static async Task DeleteDirectoryAsync(
+    public static async Task DeleteDirectoriesAsync(
         Expression<Func<AnalyzedDirectory, bool>> validator) =>
         await Table.Where(validator).DeleteAsync();
 }

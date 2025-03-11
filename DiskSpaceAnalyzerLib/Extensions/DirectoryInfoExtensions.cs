@@ -1,6 +1,6 @@
 namespace DiskSpaceAnalyzerLib.Extensions;
 
-public static class DirectoryInfoExtension
+public static class DirectoryInfoExtensions
 {
     public static bool IsChildDirectoryOf(this DirectoryInfo childDir, DirectoryInfo parentDir)
     {

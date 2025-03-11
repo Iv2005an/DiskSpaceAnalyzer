@@ -1,10 +1,10 @@
-﻿using static DiskSpaceAnalyzerLib.Constants;
+﻿using static DiskSpaceAnalyzerLib.Models.Category;
 
 namespace DiskSpaceAnalyzerLib.Models;
 
-public class CategoryInfo(FileTypes category, int fileCount, float percentages)
+public class CategoryInfo(Categories category, int fileCount, float percentages)
 {
-    public FileTypes Category => category;
+    public Categories Category => category;
     public int FilesCount => fileCount;
     public float Percentages => percentages;
 }
