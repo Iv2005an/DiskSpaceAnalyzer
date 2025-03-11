@@ -1,22 +1,10 @@
-﻿using SQLite;
+﻿using DiskSpaceAnalyzerLib.Extensions;
 
-namespace DiskSpaceAnalyzerLib;
+namespace DiskSpaceAnalyzerLib.Models;
 
-public static class Constants
+public static class Category
 {
-    public const string DatabaseFilename = "DiskSpaceAnalyzerDB.db3";
-    public const SQLiteOpenFlags Flags =
-        SQLiteOpenFlags.ReadWrite |
-        SQLiteOpenFlags.Create |
-        SQLiteOpenFlags.SharedCache;
-    private static string? _databasePath;
-    public static string DatabasePath
-    {
-        get => Path.Combine(_databasePath ?? Environment.CurrentDirectory, DatabaseFilename);
-        set { _databasePath = value; }
-    }
-
-    public enum FileTypes
+    public enum Categories
     {
         Raster,
         Vector,
@@ -37,7 +25,7 @@ public static class Constants
         Other,
         Error,
     }
-    public static readonly string[][] FileTypesExtensions =
+    public static readonly string[][] CategoriesExtensions =
     [
         [
             "ART", "ARW", "BMP", "CR", "CRW", "DCM", "DDS", "DJVU", "DNG", "EXR", "FPX", "GIF", "ICO", "JPG", "JP",
@@ -103,4 +91,25 @@ public static class Constants
             "MIND", "TSCPROJ"
         ]
     ];
+    public static Categories GetCategory(FileInfo file)
+    {
+        string extension = file.Extension.Replace(".", string.Empty).ToUpper();
+        if (Categories.Raster.GetExtensions().Contains(extension)) return Categories.Raster;
+        if (Categories.Vector.GetExtensions().Contains(extension)) return Categories.Vector;
+        if (Categories.Text.GetExtensions().Contains(extension)) return Categories.Text;
+        if (Categories.Audio.GetExtensions().Contains(extension)) return Categories.Audio;
+        if (Categories.Video.GetExtensions().Contains(extension)) return Categories.Video;
+        if (Categories.EBook.GetExtensions().Contains(extension)) return Categories.EBook;
+        if (Categories.CAD.GetExtensions().Contains(extension)) return Categories.CAD;
+        if (Categories.Presentation.GetExtensions().Contains(extension)) return Categories.Presentation;
+        if (Categories.Spreadsheet.GetExtensions().Contains(extension)) return Categories.Spreadsheet;
+        if (Categories.Database.GetExtensions().Contains(extension)) return Categories.Database;
+        if (Categories.Archive.GetExtensions().Contains(extension)) return Categories.Archive;
+        if (Categories.Web.GetExtensions().Contains(extension)) return Categories.Web;
+        if (Categories.Developer.GetExtensions().Contains(extension)) return Categories.Developer;
+        if (Categories.System.GetExtensions().Contains(extension)) return Categories.System;
+        if (Categories.Executables.GetExtensions().Contains(extension)) return Categories.Executables;
+        if (Categories.Settings.GetExtensions().Contains(extension)) return Categories.Settings;
+        return Categories.Other;
+    }
 }

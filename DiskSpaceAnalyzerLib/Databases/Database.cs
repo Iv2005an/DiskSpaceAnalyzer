@@ -3,8 +3,32 @@ using SQLite;
 
 namespace DiskSpaceAnalyzerLib.Databases;
 
-internal static class Database
+public static class Database
 {
+    private static string _databaseFilename = "DiskSpaceAnalyzerDB.db3";
+    public static string DatabaseFilename
+    {
+        get => _databaseFilename;
+        set
+        {
+            _databaseFilename = value;
+            _connection = null;
+        }
+    }
+    private static string? _databasePath;
+    public static string DatabasePath
+    {
+        get => Path.Combine(_databasePath ?? Environment.CurrentDirectory, DatabaseFilename);
+        set
+        {
+            _databasePath = value;
+            _connection = null;
+        }
+    }
+    public const SQLiteOpenFlags Flags =
+    SQLiteOpenFlags.ReadWrite |
+    SQLiteOpenFlags.Create |
+    SQLiteOpenFlags.SharedCache;
     private static SQLiteAsyncConnection? _connection;
     public static SQLiteAsyncConnection Connection
     {
@@ -12,7 +36,7 @@ internal static class Database
         {
             if (_connection is null)
             {
-                _connection = new SQLiteAsyncConnection(Constants.DatabasePath, Constants.Flags);
+                _connection = new SQLiteAsyncConnection(DatabasePath, Flags);
                 _connection.CreateTableAsync<AnalyzedFile>().Wait();
                 _connection.CreateTableAsync<AnalyzedDirectory>().Wait();
             }
