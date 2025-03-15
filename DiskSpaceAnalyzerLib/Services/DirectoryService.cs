@@ -1,4 +1,5 @@
-﻿using DiskSpaceAnalyzerLib.Databases;
+using DiskSpaceAnalyzerLib.Databases;
+using DiskSpaceAnalyzerLib.Extensions;
 using DiskSpaceAnalyzerLib.Models;
 
 namespace DiskSpaceAnalyzerLib.Services;
@@ -11,10 +12,8 @@ public static class DirectoryService
     {
         foreach (DirectoryInfo dir in sourceDirs)
         {
-            if (ignoreDirs is not null && CatalogService.IsIgnored(dir, ignoreDirs))
-            {
+            if (dir.IsChildDirectoryOfAny(ignoreDirs))
                 progress?.Report(new(dir, "IGNORED"));
-            }
             else
             {
                 List<string> directoriesToDelete = [dir.Root.FullName, dir.FullName];
