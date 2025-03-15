@@ -20,4 +20,12 @@ public static class DirectoryInfoExtensions
             if (childDir.IsChildDirectoryOf(parentDir)) return true;
         return false;
     }
+
+    public static bool IsParentDirectoryOfAny(this DirectoryInfo parentDir, List<DirectoryInfo>? childDirs)
+    {
+        if (childDirs is null) return false;
+        foreach (DirectoryInfo childDir in childDirs)
+            if (childDir.IsChildDirectoryOf(parentDir)) return true;
+        return false;
+    }
 }
