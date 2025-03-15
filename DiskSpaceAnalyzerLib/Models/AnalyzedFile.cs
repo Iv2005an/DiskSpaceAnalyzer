@@ -1,5 +1,6 @@
-﻿using DiskSpaceAnalyzerLib.Services;
-using SQLite;
+﻿using SQLite;
+using DiskSpaceAnalyzerLib.Extensions;
+using DiskSpaceAnalyzerLib.Services;
 using static DiskSpaceAnalyzerLib.Models.Category;
 
 namespace DiskSpaceAnalyzerLib.Models;
@@ -16,7 +17,7 @@ public class AnalyzedFile
             DirectoryPath = value.DirectoryName!;
             Name = value.Name;
             Weight = value.Length;
-            Category = GetCategory(value);
+            Category = value.GetCategory();
             EditTimeUtc = value.LastWriteTimeUtc;
             Checksum = CatalogService.GetChecksum(value);
         }
