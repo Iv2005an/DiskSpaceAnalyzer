@@ -39,13 +39,14 @@ public static class DirectoryService
                     DirectoryInfo[] dirs = dir.GetDirectories();
                     tasks.Add(Analyze([.. dirs], ignoreDirs, progress));
                     await Task.WhenAll(tasks);
-                    await DirectoryDatabase.AddDirectoryAsync(new()
-                    {
-                        Directory = dir,
-                        FileCount = files.Length,
-                        DirectoryCount = dirs.Length,
-                        FilesWeight = filesWeight,
-                    });
+                    if (ignoreDirs is null || !dir.IsParentDirectoryOfAny(ignoreDirs))
+                        await DirectoryDatabase.AddDirectoryAsync(new()
+                        {
+                            Directory = dir,
+                            FileCount = files.Length,
+                            DirectoryCount = dirs.Length,
+                            FilesWeight = filesWeight,
+                        });
                     progress?.Report(new(dir, "ANALYZED", ReportLevel.SUCCESS));
                 }
                 catch (IOException)
