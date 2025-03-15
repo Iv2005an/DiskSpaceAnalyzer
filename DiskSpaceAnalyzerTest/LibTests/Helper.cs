@@ -15,7 +15,7 @@ public class Helper
         return new(Environment.CurrentDirectory);
     }
 
-    public static DirectoryInfo[] Prepare(string testName)
+    public static DirectoryInfo[] Prepare(string testName, bool clear = true)
     {
         string solutionPath = GetSolutionPath().FullName;
         DirectoryInfo sourceDir = new(Path.Combine(solutionPath, "TestDir"));
@@ -23,7 +23,7 @@ public class Helper
         DirectoryInfo databasesDir = new(Path.Combine(outputDir.FullName, "_databases"));
 
         outputDir.Create();
-        outputDir.Delete(true);
+        if (clear) outputDir.Delete(true);
         databasesDir.Create();
 
         Database.DatabasePath = databasesDir.FullName;
