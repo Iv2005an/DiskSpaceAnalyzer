@@ -9,7 +9,11 @@ public class AnalyzedDirectory
     public DirectoryInfo Directory
     {
         get => new(DirectoryPath);
-        set => DirectoryPath = value.FullName;
+        set
+        {
+            DirectoryPath = value.FullName;
+            AnalyzeTimeUtc = DateTime.UtcNow;
+        }
     }
 
     [Column("id"), PrimaryKey, AutoIncrement]
@@ -18,7 +22,7 @@ public class AnalyzedDirectory
     [Column("directory_path"), Indexed(Unique = true)]
     public string DirectoryPath { get; set; } = "";
 
-    [Column("analyze_time")]
+    [Column("analyze_time_utc")]
     public DateTime AnalyzeTimeUtc { get; set; }
 
     [Column("file_count")]

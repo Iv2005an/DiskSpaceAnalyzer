@@ -42,7 +42,6 @@ public static class DirectoryService
                     await DirectoryDatabase.AddDirectoryAsync(new()
                     {
                         Directory = dir,
-                        AnalyzeTimeUtc = DateTime.UtcNow,
                         FileCount = files.Length,
                         DirectoryCount = dirs.Length,
                         FilesWeight = filesWeight,

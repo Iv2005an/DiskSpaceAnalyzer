@@ -16,6 +16,7 @@ public class AnalyzedFile
         {
             DirectoryPath = value.DirectoryName!;
             Name = value.Name;
+            AnalyzeTimeUtc = DateTime.UtcNow;
             Weight = value.Length;
             Category = value.GetCategory();
             EditTimeUtc = value.LastWriteTimeUtc;
@@ -31,6 +32,9 @@ public class AnalyzedFile
 
     [Column("name")]
     public string Name { get; set; } = "";
+
+    [Column("analyze_time_utc")]
+    public DateTime AnalyzeTimeUtc { get; set; }
 
     [Column("weight")]
     public long Weight { get; set; }
