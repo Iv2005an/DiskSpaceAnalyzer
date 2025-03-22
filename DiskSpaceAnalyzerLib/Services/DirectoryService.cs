@@ -1,6 +1,7 @@
 using DiskSpaceAnalyzerLib.Databases;
 using DiskSpaceAnalyzerLib.Extensions;
 using DiskSpaceAnalyzerLib.Models;
+using static DiskSpaceAnalyzerLib.Models.Category;
 
 namespace DiskSpaceAnalyzerLib.Services;
 
@@ -64,5 +65,31 @@ public static class DirectoryService
 
             }
         }
+    }
+
+    public static async Task<List<CategoryInfo>> GetInfo(
+        List<DirectoryInfo> sourceDirs, List<DirectoryInfo>? ignoreDirs = null,
+        Categories[]? categories = null)
+    {
+        List<CategoryInfo> categoryInfos = [];
+        int fileCount = 0;
+        foreach (Categories category in categories ?? Enum.GetValues<Categories>())
+        {
+            List<AnalyzedFile> categoryFiles = await FileDatabase.GetFilesAsync(file => file.Category == category);
+            categoryFiles = [.. categoryFiles.Where(file => {
+                DirectoryInfo dir = file.File.Directory!;
+                return dir.IsChildDirectoryOfAny(sourceDirs)
+                    && (ignoreDirs == null
+                        || !dir.IsChildDirectoryOfAny(ignoreDirs));
+            })];
+            fileCount += categoryFiles.Count;
+            categoryInfos.Add(new(category, categoryFiles, 0));
+        }
+
+        return [.. categoryInfos.Select(categoryInfo =>
+        {
+            categoryInfo.Percentages = (float)Math.Round((float)categoryInfo.Files.Count / fileCount, 4);
+            return categoryInfo;
+        })];
     }
 }

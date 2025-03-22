@@ -2,9 +2,9 @@
 
 namespace DiskSpaceAnalyzerLib.Models;
 
-public class CategoryInfo(Categories category, int fileCount, float percentages)
+public class CategoryInfo(Categories category, List<AnalyzedFile> files, float percentages)
 {
     public Categories Category => category;
-    public int FilesCount => fileCount;
-    public float Percentages => percentages;
+    public List<AnalyzedFile> Files => files;
+    public float Percentages { get; set; } = percentages;
 }
