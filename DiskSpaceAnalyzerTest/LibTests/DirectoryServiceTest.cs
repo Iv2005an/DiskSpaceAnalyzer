@@ -21,6 +21,7 @@ public class DirectoryServiceTest
         Assert.Equal(800, fileCount);
         Assert.Equal(16, directoryCount);
     }
+
     [Fact]
     public async Task SimpleAnalyzeRepeatTest()
     {
@@ -48,6 +49,7 @@ public class DirectoryServiceTest
         Assert.Equal(699, fileCount);
         Assert.Equal(12, directoryCount);
     }
+
     [Fact]
     public async Task IgnoreAnalyzeRepeatTest()
     {
@@ -65,8 +67,9 @@ public class DirectoryServiceTest
     {
         DirectoryInfo[] dirs = Helper.Prepare("MultipleIgnoreAnalyzeTest");
         string sourceDir = dirs[0].FullName;
+
         await DirectoryService.Analyze([dirs[0]], [
-            new(Path.Combine(dirs[0].FullName, "Фото 1", "Фото 1", "Фото 1")),
+            new(Path.Combine(sourceDir, "Фото 1", "Фото 1", "Фото 1")),
             new(Path.Combine(sourceDir, "Фото 2")),
         ]);
 
