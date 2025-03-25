@@ -20,7 +20,7 @@ public class AnalyzedFile
             Weight = value.Length;
             Category = value.GetCategory();
             EditTimeUtc = value.LastWriteTimeUtc;
-            Checksum = CatalogService.GetChecksum(value);
+            Checksum = FileService.GetChecksum(value);
         }
     }
 
