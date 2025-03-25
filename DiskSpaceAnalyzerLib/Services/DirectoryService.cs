@@ -13,8 +13,7 @@ public static class DirectoryService
     {
         foreach (DirectoryInfo dir in sourceDirs)
         {
-            if (dir.IsChildDirectoryOfAny(ignoreDirs))
-                progress?.Report(new(dir, "IGNORED"));
+            if (dir.IsChildDirectoryOfAny(ignoreDirs)) progress?.Report(new(dir, "IGNORED"));
             else
             {
                 List<string> directoriesToDelete = [dir.Root.FullName, dir.FullName];
@@ -50,19 +49,9 @@ public static class DirectoryService
                         });
                     progress?.Report(new(dir, "ANALYZED", ReportLevel.SUCCESS));
                 }
-                catch (IOException)
-                {
-                    progress?.Report(new(dir, "I/O ERROR", ReportLevel.ERROR));
-                }
-                catch (UnauthorizedAccessException)
-                {
-                    progress?.Report(new(dir, "ACCESS ERROR", ReportLevel.ERROR));
-                }
-                catch (Exception)
-                {
-                    progress?.Report(new(dir, "INVALID ERROR", ReportLevel.ERROR));
-                }
-
+                catch (IOException) { progress?.Report(new(dir, "I/O ERROR", ReportLevel.ERROR)); }
+                catch (UnauthorizedAccessException) { progress?.Report(new(dir, "ACCESS ERROR", ReportLevel.ERROR)); }
+                catch (Exception) { progress?.Report(new(dir, "INVALID ERROR", ReportLevel.ERROR)); }
             }
         }
     }
