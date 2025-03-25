@@ -47,4 +47,6 @@ public class AnalyzedFile
 
     [Column("checksum")]
     public string Checksum { get; set; } = "";
+
+    public override string ToString() => File.FullName;
 }

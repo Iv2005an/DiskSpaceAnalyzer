@@ -33,4 +33,6 @@ public class AnalyzedDirectory
 
     [Column("files_weight")]
     public long FilesWeight { get; set; }
+
+    public override string ToString() => Directory.FullName;
 }
