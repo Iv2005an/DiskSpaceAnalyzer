@@ -9,7 +9,7 @@ public static class DirectoryService
 {
     public static async Task Analyze(
         List<DirectoryInfo> sourceDirs, List<DirectoryInfo>? ignoreDirs = null,
-        IProgress<AnalyzeProgressReport>? progress = null)
+        IProgress<DirectoryProgressReport>? progress = null)
     {
         foreach (DirectoryInfo dir in sourceDirs)
         {
