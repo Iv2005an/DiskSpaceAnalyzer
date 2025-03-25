@@ -81,11 +81,11 @@ public static class Category
             "ICNS", "SYS", "CAT", "HLP", "ICL", "BUD", "DEV", "FFL", "FFO", "POL", "ION", "PNF", "DIT", "HTT", "NB0",
             "MLC", "BASH_HISTORY", "EBD", "FOTA", "REG", "BASHRC", "HIV", "BASH_PROFILE", "NT", "QVM", "ICONPACKAGE",
             "IPTHEME", "PCK", "HDMP", "MDMP", "SDT", "TTF", "OTF", "DMG", "TMP", "URL", "IMG", "BAK", "TORRENT", "MSI",
-            "CRDOWNLOAD", "ISO", "HEX"
+            "CRDOWNLOAD", "ISO", "HEX","PKG"
         ],
         ["SCR", "EXE", "IPA", "APP", "BAT", "PS1", "CGI", "COM", "GADGET", "PIF", "VB", "WSF", "CMD", "DS", "AIR"],
         [
-            "ACT", "INF", "INI", "CFG", "PKG", "CDT", "ICM", "GID", "API", "DUN", "HT", "PRF", "FM3", "RDF", "ASW",
+            "ACT", "INF", "INI", "CFG", "CDT", "ICM", "GID", "API", "DUN", "HT", "PRF", "FM3", "RDF", "ASW",
             "MIND", "TSCPROJ"
         ]
     ];
