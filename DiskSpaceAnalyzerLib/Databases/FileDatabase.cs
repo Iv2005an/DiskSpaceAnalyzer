@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 
 namespace DiskSpaceAnalyzerLib.Databases;
 
-public static class AnalyzedFilesDatabase
+public static class FileDatabase
 {
     private static SQLiteAsyncConnection Connection => Database.Connection;
     private static AsyncTableQuery<AnalyzedFile> Table => Connection.Table<AnalyzedFile>();

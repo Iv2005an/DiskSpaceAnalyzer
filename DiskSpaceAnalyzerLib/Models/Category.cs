@@ -1,22 +1,8 @@
-﻿using SQLite;
+﻿namespace DiskSpaceAnalyzerLib.Models;
 
-namespace DiskSpaceAnalyzerLib;
-
-public static class Constants
+public static class Category
 {
-    public const string DatabaseFilename = "DiskSpaceAnalyzerDB.db3";
-    public const SQLiteOpenFlags Flags =
-        SQLiteOpenFlags.ReadWrite |
-        SQLiteOpenFlags.Create |
-        SQLiteOpenFlags.SharedCache;
-    private static string? _databasePath;
-    public static string DatabasePath
-    {
-        get => Path.Combine(_databasePath ?? Environment.CurrentDirectory, DatabaseFilename);
-        set { _databasePath = value; }
-    }
-
-    public enum FileTypes
+    public enum Categories
     {
         Raster,
         Vector,
@@ -37,7 +23,7 @@ public static class Constants
         Other,
         Error,
     }
-    public static readonly string[][] FileTypesExtensions =
+    public static readonly string[][] CategoriesExtensions =
     [
         [
             "ART", "ARW", "BMP", "CR", "CRW", "DCM", "DDS", "DJVU", "DNG", "EXR", "FPX", "GIF", "ICO", "JPG", "JP",
@@ -95,11 +81,11 @@ public static class Constants
             "ICNS", "SYS", "CAT", "HLP", "ICL", "BUD", "DEV", "FFL", "FFO", "POL", "ION", "PNF", "DIT", "HTT", "NB0",
             "MLC", "BASH_HISTORY", "EBD", "FOTA", "REG", "BASHRC", "HIV", "BASH_PROFILE", "NT", "QVM", "ICONPACKAGE",
             "IPTHEME", "PCK", "HDMP", "MDMP", "SDT", "TTF", "OTF", "DMG", "TMP", "URL", "IMG", "BAK", "TORRENT", "MSI",
-            "CRDOWNLOAD", "ISO", "HEX"
+            "CRDOWNLOAD", "ISO", "HEX","PKG"
         ],
         ["SCR", "EXE", "IPA", "APP", "BAT", "PS1", "CGI", "COM", "GADGET", "PIF", "VB", "WSF", "CMD", "DS", "AIR"],
         [
-            "ACT", "INF", "INI", "CFG", "PKG", "CDT", "ICM", "GID", "API", "DUN", "HT", "PRF", "FM3", "RDF", "ASW",
+            "ACT", "INF", "INI", "CFG", "CDT", "ICM", "GID", "API", "DUN", "HT", "PRF", "FM3", "RDF", "ASW",
             "MIND", "TSCPROJ"
         ]
     ];
