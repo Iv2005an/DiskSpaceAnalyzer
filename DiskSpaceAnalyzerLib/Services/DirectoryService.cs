@@ -65,23 +65,29 @@ public static class DirectoryService
     {
         List<CategoryInfo> categoryInfos = [];
         int fileCount = 0;
+        long fileWeights = 0;
         foreach (Categories category in categories ?? Enum.GetValues<Categories>())
         {
-            List<AnalyzedFile> categoryFiles = await FileDatabase.GetFilesAsync(file => file.Category == category);
-            categoryFiles = [.. categoryFiles.Where(file => {
+            List<AnalyzedFile> files = await FileDatabase.GetFilesAsync(file => file.Category == category);
+            files = [.. files.Where(file => {
                 DirectoryInfo dir = file.File.Directory!;
                 return dir.IsChildDirectoryOfAny(sourceDirs)
                     && (ignoreDirs == null
                         || !dir.IsChildDirectoryOfAny(ignoreDirs));
             })];
-            List<List<AnalyzedFile>> fileDuplicates = FileService.GetFileDuplicates(categoryFiles, isFastCompare, isFileNameCompare);
-            fileCount += categoryFiles.Count + fileDuplicates.Count;
-            categoryInfos.Add(new(category, 0, categoryFiles, fileDuplicates));
+            List<List<AnalyzedFile>> duplicates = FileService.GetFileDuplicates(files, isFastCompare, isFileNameCompare);
+            fileCount += files.Count + duplicates.Count;
+            long categoryWeight = files.Sum(file => file.Weight) + duplicates.Sum(list => list.Sum(file => file.Weight));
+            fileWeights += categoryWeight;
+            long categoryClearWeight = files.Sum(file => file.Weight) + duplicates.Sum(list => list[0].Weight);
+            categoryInfos.Add(new(category, 0, 0, categoryWeight, categoryClearWeight, files, duplicates));
         }
         return [.. categoryInfos.Select(categoryInfo =>
         {
-            categoryInfo.Percentages = (float)Math.Round(
+            categoryInfo.CountPercentages = (float)Math.Round(
                 (float)(categoryInfo.Files.Count + categoryInfo.Duplicates.Count) / fileCount, 4);
+            categoryInfo.WeightPercentages = (float)Math.Round(
+                (float)categoryInfo.Weight / fileWeights, 4);
             return categoryInfo;
         })];
     }
