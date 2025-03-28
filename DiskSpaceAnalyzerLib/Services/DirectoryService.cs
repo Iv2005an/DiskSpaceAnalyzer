@@ -29,7 +29,7 @@ public static class DirectoryService
                 {
                     List<Task> tasks = [];
                     await FileDatabase.DeleteFilesAsync(file => file.DirectoryPath == dir.FullName);
-                    FileInfo[] files = dir.GetFiles();
+                    FileInfo[] files = [.. dir.GetFiles().Where(file => file.Extension != ".DS_Store")];
                     long filesWeight = 0;
                     foreach (FileInfo file in files)
                     {
