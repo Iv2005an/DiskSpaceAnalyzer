@@ -1,7 +1,7 @@
 ﻿using System.CommandLine;
 using System.Text.RegularExpressions;
 using DiskSpaceAnalyzerConsole.Services;
-using static DiskSpaceAnalyzerLib.Constants;
+using static DiskSpaceAnalyzerLib.Models.Category;
 
 Command categoriesCommand = new("categories", "Show available categories and their extensions");
 categoriesCommand.AddAlias("c");
@@ -60,7 +60,7 @@ Command rulesCommand = new("rules", "Show a list of the user rules")
 rulesCommand.AddAlias("r");
 offRuleCommand.SetHandler(ProgramService.Rules);
 
-Option<List<FileTypes>> categoriesOption = new(["--categories", "-c"], "Categories for organize")
+Option<List<Categories>> categoriesOption = new(["--categories", "-c"], "Categories for organize")
 {
     IsRequired = true,
     AllowMultipleArgumentsPerToken = true,

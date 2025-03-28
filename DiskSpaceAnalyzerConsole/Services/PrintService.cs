@@ -1,6 +1,6 @@
 using DiskSpaceAnalyzerLib.Extensions;
 using DiskSpaceAnalyzerLib.Models;
-using static DiskSpaceAnalyzerLib.Constants;
+using static DiskSpaceAnalyzerLib.Models.Category;
 
 namespace DiskSpaceAnalyzerConsole.Services;
 
@@ -21,8 +21,8 @@ internal static class PrintService
     public static void PrintCategories()
     {
         PrintSuccessMessage("Available categories for analysis:\n");
-        var categories = Enum.GetValues<FileTypes>();
-        foreach (FileTypes category in categories[..(categories.Length - 2)])
+        var categories = Enum.GetValues<Categories>();
+        foreach (Categories category in categories[..(categories.Length - 2)])
         {
             PrintInfoMessage($"\n{category}:");
             string s = "";
@@ -36,7 +36,7 @@ internal static class PrintService
     {
         foreach (CategoryInfo categoryInfo in categoriesInfo)
             PrintWarningMessage(
-                $"{categoryInfo.Category}: {categoryInfo.FilesCount} ({categoryInfo.Percentages:P2})\n");
+                $"{categoryInfo.Category}: {categoryInfo.Files.Count} ({categoryInfo.CountPercentages:P2})\n");
     }
     public static void PrintCompletedMessage() => PrintSuccessMessage("COMPLETED\n");
 }

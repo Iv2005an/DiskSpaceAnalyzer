@@ -1,5 +1,5 @@
 ﻿using System.Text.RegularExpressions;
-using static DiskSpaceAnalyzerLib.Constants;
+using static DiskSpaceAnalyzerLib.Models.Category;
 
 namespace DiskSpaceAnalyzerConsole.Services;
 
@@ -46,7 +46,7 @@ internal static class ProgramService
     }
 
     public static async Task Organize(
-        List<FileTypes> categories,
+        List<Categories> categories,
         List<DirectoryInfo> sourceDirs, List<DirectoryInfo> ignoreDirs,
         DirectoryInfo outputDir, bool isRepeat)
     {
