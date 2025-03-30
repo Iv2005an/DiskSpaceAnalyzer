@@ -1,9 +1,9 @@
 namespace DiskSpaceAnalyzerLib.Models;
 
 public class DirectoryProgressReport(
-    DirectoryInfo dir,
+    AnalyzedDirectory dir,
     string message,
     ReportLevel level = ReportLevel.Info) : ProgressReport(message, level)
 {
-    public DirectoryInfo Dir { get; } = dir;
+    public AnalyzedDirectory Dir { get; } = dir;
 }

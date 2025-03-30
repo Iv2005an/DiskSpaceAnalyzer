@@ -27,11 +27,11 @@ public class AnalyzedDirectory
 
     [Column("analyze_time_utc")] public DateTime AnalyzeTimeUtc { get; init; }
 
-    [Column("file_count")] public int FileCount { get; init; }
+    [Column("file_count")] public int FileCount { get; set; }
 
-    [Column("directory_count")] public int DirectoryCount { get; init; }
+    [Column("directory_count")] public int DirectoryCount { get; set; }
 
-    [Column("files_weight")] public long FilesWeight { get; init; }
+    [Column("files_weight")] public long FilesWeight { get; set; }
 
     public override string ToString() => Directory.FullName;
 }
