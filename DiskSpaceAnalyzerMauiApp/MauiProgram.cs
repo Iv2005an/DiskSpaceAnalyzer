@@ -1,4 +1,7 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using CommunityToolkit.Maui;
+using DiskSpaceAnalyzerMauiApp.Resources.ViewModels;
+using DiskSpaceAnalyzerMauiApp.Resources.Views;
+using Microsoft.Extensions.Logging;
 
 namespace DiskSpaceAnalyzerMauiApp
 {
@@ -9,16 +12,12 @@ namespace DiskSpaceAnalyzerMauiApp
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
-                .ConfigureFonts(fonts =>
-                {
-                    fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
-                    fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
-                });
-
+                .UseMauiCommunityToolkit();
+            builder.Services.AddSingleton<AnalyzeSettingsPage>();
+            builder.Services.AddSingleton<AnalyzeSettingsViewModel>();
 #if DEBUG
             builder.Logging.AddDebug();
 #endif
-
             return builder.Build();
         }
     }

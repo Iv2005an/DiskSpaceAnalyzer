@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:DiskSpaceAnalyzerMauiApp.Resources.ViewModels"
+             x:DataType="viewModels:AnalyzeSettingsViewModel"
+             x:Class="DiskSpaceAnalyzerMauiApp.Resources.Views.AnalyzeSettingsPage"
+             Title="Настройка анализа">
+    <Grid Margin="16,0,16,16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Label Grid.Row="0" Text="Директории для анализа:" FontSize="Large" />
+        <Border Grid.Row="1"
+                Margin="0,8"
+                Style="{StaticResource BorderStyle}">
+            <ListView ItemsSource="{Binding Paths}"
+                      SelectedItem="{Binding SelectedPath, Mode=TwoWay}" />
+        </Border>
+        <HorizontalStackLayout Grid.Row="2" Spacing="10" HorizontalOptions="End">
+            <Button Text="Удалить"
+                    Style="{StaticResource DestructiveButtonStyle}"
+                    Command="{Binding DeletePathCommand}"
+                    CommandParameter="{Binding SelectedPath}" />
+            <Button Text="Добавить"
+                    Style="{StaticResource BaseButtonStyle}"
+                    Command="{Binding AddPathCommand}" />
+        </HorizontalStackLayout>
+        <Label Grid.Row="3" Text="Игнорируемые директории:" FontSize="Large" />
+        <Border Grid.Row="4"
+                Margin="0,8"
+                Style="{StaticResource BorderStyle}">
+            <ListView ItemsSource="{Binding IgnorePaths}"
+                      SelectedItem="{Binding SelectedIgnorePath, Mode=TwoWay}" />
+        </Border>
+        <HorizontalStackLayout Grid.Row="5" Spacing="10" HorizontalOptions="End">
+            <Button Text="Удалить"
+                    Style="{StaticResource DestructiveButtonStyle}"
+                    Command="{Binding DeleteIgnorePathCommand}"
+                    CommandParameter="{Binding SelectedIgnorePath}" />
+            <Button Text="Добавить"
+                    Style="{StaticResource BaseButtonStyle}"
+                    Command="{Binding AddIgnorePathCommand}" />
+        </HorizontalStackLayout>
+        <StackLayout Grid.Row="6"
+                     Orientation="Horizontal"
+                     HorizontalOptions="End"
+                     Spacing="5"
+                     Margin="0,8,0,0">
+            <Label Text="Повторить анализ?" VerticalTextAlignment="Center" />
+            <Switch IsToggled="{Binding RepeatAnalyze}" />
+        </StackLayout>
+        <StackLayout Grid.Row="7"
+                     Margin="0,8,0,0">
+            <Button
+                Text="Выполнить анализ"
+                HorizontalOptions="Fill"
+                Style="{StaticResource PrimaryButtonStyle}"
+                IsEnabled="{Binding CanAnalyze}"
+                Clicked="RunAnalyze_OnClicked" />
+        </StackLayout>
+    </Grid>
+</ContentPage>
