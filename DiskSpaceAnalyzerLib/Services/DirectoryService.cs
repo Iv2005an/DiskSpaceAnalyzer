@@ -12,7 +12,9 @@ public static class DirectoryService
         IProgress<DirectoryProgressReport>? directoryProgressReport = null)
     {
         foreach (var dir in sourceDirs)
-            if (dir.IsChildDirectoryOfAny(ignoreDirs)) directoryProgressReport?.Report(new(dir, "IGNORED"));
+        {
+            var analyzedDir = new AnalyzedDirectory { Directory = dir };
+            if (dir.IsChildDirectoryOfAny(ignoreDirs)) directoryProgressReport?.Report(new(analyzedDir, "IGNORED"));
             else
             {
                 List<string> directoriesToDelete = [dir.Root.FullName, dir.FullName];
@@ -29,7 +31,7 @@ public static class DirectoryService
                 {
                     List<Task> tasks = [];
                     await FileDatabase.DeleteFilesAsync(file => file.DirectoryPath == dir.FullName);
-                    FileInfo[] files = [.. dir.GetFiles().Where(file => file.Extension != ".DS_Store")];
+                    FileInfo[] files = [.. dir.GetFiles().Where(file => file.Attributes != FileAttributes.Hidden)];
                     long filesWeight = 0;
                     foreach (var file in files)
                     {
@@ -38,31 +40,35 @@ public static class DirectoryService
                     }
 
                     var dirs = dir.GetDirectories();
+                    analyzedDir.FileCount = files.Length;
+                    analyzedDir.DirectoryCount = dirs.Length;
+                    analyzedDir.FilesWeight = filesWeight;
+
+                    var isIgnored = dir.IsParentDirectoryOfAny(ignoreDirs);
+                    if (!isIgnored)
+                        directoryProgressReport?.Report(new(analyzedDir, "ANALYZED", ReportLevel.Success));
+                    else
+                        directoryProgressReport?.Report(new(analyzedDir, "IGNORED"));
+
                     tasks.Add(Analyze([.. dirs], ignoreDirs, directoryProgressReport));
                     await Task.WhenAll(tasks);
-                    if (ignoreDirs is null || !dir.IsParentDirectoryOfAny(ignoreDirs))
-                        await DirectoryDatabase.AddDirectoryAsync(new()
-                        {
-                            Directory = dir,
-                            FileCount = files.Length,
-                            DirectoryCount = dirs.Length,
-                            FilesWeight = filesWeight
-                        });
-                    directoryProgressReport?.Report(new(dir, "ANALYZED", ReportLevel.Success));
+
+                    if (!isIgnored) await DirectoryDatabase.AddDirectoryAsync(analyzedDir);
                 }
                 catch (IOException)
                 {
-                    directoryProgressReport?.Report(new(dir, "I/O ERROR", ReportLevel.Error));
+                    directoryProgressReport?.Report(new(analyzedDir, "I/O ERROR", ReportLevel.Error));
                 }
                 catch (UnauthorizedAccessException)
                 {
-                    directoryProgressReport?.Report(new(dir, "ACCESS ERROR", ReportLevel.Error));
+                    directoryProgressReport?.Report(new(analyzedDir, "ACCESS ERROR", ReportLevel.Error));
                 }
                 catch (Exception)
                 {
-                    directoryProgressReport?.Report(new(dir, "INVALID ERROR", ReportLevel.Error));
+                    directoryProgressReport?.Report(new(analyzedDir, "INVALID ERROR", ReportLevel.Error));
                 }
             }
+        }
     }
 
     public static async Task<List<CategoryInfo>> GetInfo(
