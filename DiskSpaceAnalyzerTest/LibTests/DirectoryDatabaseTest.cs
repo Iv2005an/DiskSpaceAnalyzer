@@ -1,5 +1,4 @@
 using DiskSpaceAnalyzerLib.Databases;
-using DiskSpaceAnalyzerLib.Models;
 
 namespace DiskSpaceAnalyzerTest.LibTests;
 
@@ -28,11 +27,8 @@ public class DirectoryDatabaseTest
     {
         Helper.Prepare("DirectoryCountTest");
 
-        for (int i = 0; i < 5; i++)
-        {
-            await DirectoryDatabase.AddDirectoryAsync(new() { DirectoryPath = i.ToString() });
-        }
-        List<AnalyzedDirectory> directories = await DirectoryDatabase.GetDirectoriesAsync();
+        for (var i = 0; i < 5; i++) await DirectoryDatabase.AddDirectoryAsync(new() { Directory = new(i.ToString()) });
+        var directories = await DirectoryDatabase.GetDirectoriesAsync();
 
         Assert.Equal(5, directories.Count);
         Assert.Equal(5, await DirectoryDatabase.GetDirectoriesCountAsync());

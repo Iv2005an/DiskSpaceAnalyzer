@@ -1,6 +1,6 @@
 using DiskSpaceAnalyzerLib.Extensions;
-namespace DiskSpaceAnalyzerTest.LibTests;
 
+namespace DiskSpaceAnalyzerTest.LibTests;
 
 public class DirectoryInfoExtensionsTests
 {
@@ -36,7 +36,7 @@ public class DirectoryInfoExtensionsTests
     [InlineData(@"C:\Test", null, false)] // Windows null-сценарий
     [InlineData("/home/user/test", null, false)] // Linux null-сценарий
     [InlineData("/Users/user/test", null, false)] // macOS null-сценарий
-    public void IsParentDirectoryOfAnyTest(string parentPath, string childPath, bool expected)
+    public void IsParentDirectoryOfAnyTest(string parentPath, string? childPath, bool expected)
     {
         var parentDir = new DirectoryInfo(parentPath);
         List<DirectoryInfo>? dirs = childPath == null ? null : [new(childPath)];

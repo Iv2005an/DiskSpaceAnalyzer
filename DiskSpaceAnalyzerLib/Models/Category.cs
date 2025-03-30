@@ -10,7 +10,7 @@ public static class Category
         Audio,
         Video,
         EBook,
-        CAD,
+        Cad,
         Presentation,
         Spreadsheet,
         Database,
@@ -21,15 +21,16 @@ public static class Category
         Executables,
         Settings,
         Other,
-        Error,
+        Error
     }
+
     public static readonly string[][] CategoriesExtensions =
     [
         [
             "ART", "ARW", "BMP", "CR", "CRW", "DCM", "DDS", "DJVU", "DNG", "EXR", "FPX", "GIF", "ICO", "JPG", "JP",
             "JPEG", "NEF", "ORF", "PCD", "PCX", "PEF", "PGM", "PICT", "PNG", "PSD", "RAF", "SFW", "TGA", "TIFF", "WBMP",
-            "XCF", "YUV", "KDC", "PCT", "SR", "TIF", "HDR", "WEBP", "NRW", "ITHMB", "THM", "PSPIMAGE", "MAC",
-            "HEIC", "RWL", "FLIF", "AVIF", "RAW", "PICTCLIPPING", "JXR", "CR2"
+            "XCF", "YUV", "KDC", "PCT", "SR", "TIF", "HDR", "WEBP", "NRW", "ITHMB", "THM", "PSPIMAGE", "MAC", "HEIC",
+            "RWL", "FLIF", "AVIF", "RAW", "PICTCLIPPING", "JXR", "CR2"
         ],
         [
             "EMF", "EPS", "SVG", "WPG", "AI", "SVGZ", "WMF", "ODG", "CDR", "VSD", "STD", "PD", "EMZ", "MIX", "OTG",
@@ -54,8 +55,8 @@ public static class Category
             "CAMREC", "CMPROJ", "CMREC", "MODD", "MPROJ", "OSP", "TREC", "G64", "VRO", "BRAW", "MSE", "PZ"
         ],
         [
-            "CBR", "EPUB", "FB2", "LIT", "LRF", "MOBI", "TCR", "PRC", "AZW3", "AZW", "ACSM", "OPF", "MBP", "CBZ", "APNX",
-            "CBT", "VBK", "IBOOKS", "KFX"
+            "CBR", "EPUB", "FB2", "LIT", "LRF", "MOBI", "TCR", "PRC", "AZW3", "AZW", "ACSM", "OPF", "MBP", "CBZ",
+            "APNX", "CBT", "VBK", "IBOOKS", "KFX"
         ],
         ["DXF", "DWG", "3DM", "3DS", "MAX", "OBJ", "STP"],
         ["ODP", "PPT", "PPTX", "PPS", "PPSX", "PPTM", "KEY", "FLIPCHART"],
@@ -70,23 +71,23 @@ public static class Category
             "CFM", "CSR", "JSP", "RSS", "CFML", "MHTML", "WEBARCHIVE"
         ],
         [
-            "RC", "P", "D", "C", "CLASS", "CPP", "CS", "DTD", "FLA", "H", "JAVA", "LUA", "M", "PL", "PLIST", "PY", "SH", "SLN",
-            "SWIFT", "VCXPROJ", "XCODEPROJ", "ASC", "BAS", "ASM", "CBL", "VBP", "IWB", "PB", "YML", "PIKA", "S19", "XT",
-            "SUO", "FSPROJ", "PBJ", "PBXUSER", "PYW", "XQ", "CD", "SB", "SB2", "ISE", "KV", "COD", "NIB", "PWN", "B",
-            "HPP", "APA", "BET", "BLUEJ", "ERB", "FXC", "M4", "OWL", "SMA", "TRX", "VC", "DEF", "XAP", "O", "PAS", "QPR",
-            "RESOURCES", "VBPROJ", "VBX", "XIB", "MD", "CCC", "WWP", "SS"
+            "RC", "P", "D", "C", "CLASS", "CPP", "CS", "DTD", "FLA", "H", "JAVA", "LUA", "M", "PL", "PLIST", "PY", "SH",
+            "SLN", "SWIFT", "VCXPROJ", "XCODEPROJ", "ASC", "BAS", "ASM", "CBL", "VBP", "IWB", "PB", "YML", "PIKA",
+            "S19", "XT", "SUO", "FSPROJ", "PBJ", "PBXUSER", "PYW", "XQ", "CD", "SB", "SB2", "ISE", "KV", "COD", "NIB",
+            "PWN", "B", "HPP", "APA", "BET", "BLUEJ", "ERB", "FXC", "M4", "OWL", "SMA", "TRX", "VC", "DEF", "XAP", "O",
+            "PAS", "QPR", "RESOURCES", "VBPROJ", "VBX", "XIB", "MD", "CCC", "WWP", "SS"
         ],
         [
             "CUR", "ANI", "DVD", "DAT", "LNK", "DLL", "NFO", "PROP", "BIN", "CAB", "CPL", "DESKTHEMEPACK", "DMP", "DRV",
             "ICNS", "SYS", "CAT", "HLP", "ICL", "BUD", "DEV", "FFL", "FFO", "POL", "ION", "PNF", "DIT", "HTT", "NB0",
             "MLC", "BASH_HISTORY", "EBD", "FOTA", "REG", "BASHRC", "HIV", "BASH_PROFILE", "NT", "QVM", "ICONPACKAGE",
             "IPTHEME", "PCK", "HDMP", "MDMP", "SDT", "TTF", "OTF", "DMG", "TMP", "URL", "IMG", "BAK", "TORRENT", "MSI",
-            "CRDOWNLOAD", "ISO", "HEX","PKG"
+            "CRDOWNLOAD", "ISO", "HEX", "PKG"
         ],
         ["SCR", "EXE", "IPA", "APP", "BAT", "PS1", "CGI", "COM", "GADGET", "PIF", "VB", "WSF", "CMD", "DS", "AIR"],
         [
-            "ACT", "INF", "INI", "CFG", "CDT", "ICM", "GID", "API", "DUN", "HT", "PRF", "FM3", "RDF", "ASW",
-            "MIND", "TSCPROJ"
+            "ACT", "INF", "INI", "CFG", "CDT", "ICM", "GID", "API", "DUN", "HT", "PRF", "FM3", "RDF", "ASW", "MIND",
+            "TSCPROJ"
         ]
     ];
 }

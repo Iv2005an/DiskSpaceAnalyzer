@@ -8,24 +8,15 @@ public static class DirectoryInfoExtensions
         while (childDir.Parent != null)
         {
             if (childDir.Parent.FullName == parentDir.FullName) return true;
-            else childDir = childDir.Parent;
+            childDir = childDir.Parent;
         }
+
         return false;
     }
 
-    public static bool IsChildDirectoryOfAny(this DirectoryInfo childDir, List<DirectoryInfo>? parentDirs)
-    {
-        if (parentDirs is null) return false;
-        foreach (DirectoryInfo parentDir in parentDirs)
-            if (childDir.IsChildDirectoryOf(parentDir)) return true;
-        return false;
-    }
+    public static bool IsChildDirectoryOfAny(this DirectoryInfo childDir, List<DirectoryInfo>? parentDirs) =>
+        parentDirs is not null && parentDirs.Any(childDir.IsChildDirectoryOf);
 
-    public static bool IsParentDirectoryOfAny(this DirectoryInfo parentDir, List<DirectoryInfo>? childDirs)
-    {
-        if (childDirs is null) return false;
-        foreach (DirectoryInfo childDir in childDirs)
-            if (childDir.IsChildDirectoryOf(parentDir)) return true;
-        return false;
-    }
+    public static bool IsParentDirectoryOfAny(this DirectoryInfo parentDir, List<DirectoryInfo>? childDirs) =>
+        childDirs is not null && childDirs.Any(childDir => childDir.IsChildDirectoryOf(parentDir));
 }
