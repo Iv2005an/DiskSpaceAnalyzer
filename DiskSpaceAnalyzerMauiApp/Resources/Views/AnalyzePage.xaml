@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:DiskSpaceAnalyzerMauiApp.Resources.ViewModels"
+             x:DataType="viewModels:AnalyzeViewModel"
+             x:Class="DiskSpaceAnalyzerMauiApp.Resources.Views.AnalyzePage"
+             Title="Анализ директорий">
+    <Shell.BackButtonBehavior>
+        <BackButtonBehavior />
+    </Shell.BackButtonBehavior>
+    <Grid Margin="16,0,16,16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Label Grid.Row="0" Text="Проанализированные директории:" Style="{StaticResource TitleLabelStyle}" />
+        <Border Grid.Row="1"
+                Margin="0,8"
+                Style="{StaticResource BorderStyle}">
+            <CollectionView ItemsSource="{Binding AnalyzedPaths, Mode=TwoWay}"
+                            SelectionMode="None" />
+        </Border>
+        <Label Grid.Row="2" Text="Проигнорированные директории:" Style="{ StaticResource TitleLabelStyle}" />
+        <Border Grid.Row="3"
+                Margin="0,8"
+                Style="{StaticResource BorderStyle}">
+            <CollectionView ItemsSource="{Binding IgnoredPaths, Mode=TwoWay}"
+                            SelectionMode="None" />
+        </Border>
+        <Label Grid.Row="4" Text="Ошибки:" Style="{StaticResource TitleLabelStyle}" />
+        <Border Grid.Row="5"
+                Margin="0,8"
+                Style="{StaticResource BorderStyle}">
+            <CollectionView ItemsSource="{Binding ErrorPaths, Mode=TwoWay}"
+                            SelectionMode="None" />
+        </Border>
+        <StackLayout Grid.Row="6"
+                     Margin="0,8,0,0"
+                     Spacing="10">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <ProgressBar Progress="{Binding AnalyzeProgressValue}" />
+                <Label Grid.Column="1"
+                       Margin="8,0,0,0"
+                       Style="{StaticResource MediumLabelStyle}">
+                    <Label.Text>
+                        <MultiBinding StringFormat="{}{0}/{1}">
+                            <Binding Path="AnalyzedDirsCount" />
+                            <Binding Path="AllDirsCount" />
+                        </MultiBinding>
+                    </Label.Text>
+                </Label>
+            </Grid>
+            <Button
+                Text="Перейти к организации пространства"
+                HorizontalOptions="Fill"
+                Style="{StaticResource PrimaryButtonStyle}"
+                IsEnabled="{Binding CanOrganize}"
+                Clicked="GoToOrganize_OnClicked" />
+            <Button
+                Text="Назад"
+                HorizontalOptions="Fill"
+                Style="{StaticResource BaseButtonStyle}"
+                IsEnabled="{Binding CanOrganize}"
+                Clicked="GoBack_OnClicked" />
+        </StackLayout>
+    </Grid>
+</ContentPage>

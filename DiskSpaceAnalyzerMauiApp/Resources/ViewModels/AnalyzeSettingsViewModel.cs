@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using CommunityToolkit.Maui.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using DiskSpaceAnalyzerLib.Databases;
 using DiskSpaceAnalyzerLib.Extensions;
 using DiskSpaceAnalyzerLib.Models;
 
@@ -9,8 +10,13 @@ namespace DiskSpaceAnalyzerMauiApp.Resources.ViewModels;
 
 public partial class AnalyzeSettingsViewModel : ObservableObject
 {
+    public AnalyzeSettingsViewModel() => Paths.CollectionChanged += (_, _) => IsCanAnalyze();
+
     [ObservableProperty] private bool _repeatAnalyze;
     [ObservableProperty] private bool _canAnalyze;
+
+    public List<string> PathsToAnalyze { get; private set; } = [];
+    public IProgress<ProgressReport>? Progress { private get; set; }
 
     [ObservableProperty] private ObservableCollection<string> _paths = [];
     [ObservableProperty] private ObservableCollection<string> _ignorePaths = [];
@@ -20,10 +26,6 @@ public partial class AnalyzeSettingsViewModel : ObservableObject
 
     [ObservableProperty] [NotifyCanExecuteChangedFor(nameof(DeleteIgnorePathCommand))]
     private string? _selectedIgnorePath;
-
-    public AnalyzeSettingsViewModel() => Paths.CollectionChanged += (_, _) => IsCanAnalyze();
-
-    public IProgress<ProgressReport>? Progress { private get; set; }
 
     [RelayCommand]
     private async Task AddPath(CancellationToken cancellationToken)
@@ -99,6 +101,13 @@ public partial class AnalyzeSettingsViewModel : ObservableObject
         IgnorePaths.Add(path);
     }
 
+    [RelayCommand]
+    private static async Task<string?> PickFolder(CancellationToken cancellationToken)
+    {
+        var folderPickerResult = await FolderPicker.PickAsync(cancellationToken);
+        return folderPickerResult.IsSuccessful ? folderPickerResult.Folder.Path : null;
+    }
+
     [RelayCommand(CanExecute = nameof(CanDeletePath))]
     private void DeletePath(string path)
     {
@@ -118,10 +127,16 @@ public partial class AnalyzeSettingsViewModel : ObservableObject
     private bool CanDeleteIgnorePath() => SelectedIgnorePath is not null;
 
     [RelayCommand]
-    private static async Task<string?> PickFolder(CancellationToken cancellationToken)
+    private async Task PreparePaths()
     {
-        var folderPickerResult = await FolderPicker.PickAsync(cancellationToken);
-        return folderPickerResult.IsSuccessful ? folderPickerResult.Folder.Path : null;
+        if (RepeatAnalyze) PathsToAnalyze = Paths.ToList();
+        else
+        {
+            var analyzedPaths = (await DirectoryDatabase.GetDirectoriesAsync(
+                    dir => Paths.Contains(dir.DirectoryPath)))
+                .Select(dir => dir.DirectoryPath).ToList();
+            PathsToAnalyze = Paths.Where(path => !analyzedPaths.Contains(path)).ToList();
+        }
     }
 
     partial void OnPathsChanged(ObservableCollection<string> value)

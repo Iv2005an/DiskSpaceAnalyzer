@@ -11,4 +11,7 @@
     <ShellContent
         ContentTemplate="{DataTemplate local:AnalyzeSettingsPage}"
         Route="AnalyzeSettingsPage" />
+    <ShellContent
+        ContentTemplate="{DataTemplate local:AnalyzePage}"
+        Route="AnalyzePage" />
 </Shell>
