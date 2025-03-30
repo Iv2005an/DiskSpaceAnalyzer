@@ -11,18 +11,18 @@ public static class DirectoryService
         List<DirectoryInfo> sourceDirs, List<DirectoryInfo>? ignoreDirs = null,
         IProgress<DirectoryProgressReport>? directoryProgressReport = null)
     {
-        foreach (DirectoryInfo dir in sourceDirs)
-        {
+        foreach (var dir in sourceDirs)
             if (dir.IsChildDirectoryOfAny(ignoreDirs)) directoryProgressReport?.Report(new(dir, "IGNORED"));
             else
             {
                 List<string> directoriesToDelete = [dir.Root.FullName, dir.FullName];
-                DirectoryInfo? parentDirectory = dir.Parent;
+                var parentDirectory = dir.Parent;
                 while (parentDirectory is not null)
                 {
                     directoriesToDelete.Add(parentDirectory.FullName);
                     parentDirectory = parentDirectory.Parent;
                 }
+
                 await DirectoryDatabase.DeleteDirectoriesAsync(
                     directory => directoriesToDelete.Contains(directory.DirectoryPath));
                 try
@@ -31,12 +31,13 @@ public static class DirectoryService
                     await FileDatabase.DeleteFilesAsync(file => file.DirectoryPath == dir.FullName);
                     FileInfo[] files = [.. dir.GetFiles().Where(file => file.Extension != ".DS_Store")];
                     long filesWeight = 0;
-                    foreach (FileInfo file in files)
+                    foreach (var file in files)
                     {
                         filesWeight += file.Length;
                         tasks.Add(FileDatabase.AddFileAsync(new() { File = file }));
                     }
-                    DirectoryInfo[] dirs = dir.GetDirectories();
+
+                    var dirs = dir.GetDirectories();
                     tasks.Add(Analyze([.. dirs], ignoreDirs, directoryProgressReport));
                     await Task.WhenAll(tasks);
                     if (ignoreDirs is null || !dir.IsParentDirectoryOfAny(ignoreDirs))
@@ -45,15 +46,23 @@ public static class DirectoryService
                             Directory = dir,
                             FileCount = files.Length,
                             DirectoryCount = dirs.Length,
-                            FilesWeight = filesWeight,
+                            FilesWeight = filesWeight
                         });
-                    directoryProgressReport?.Report(new(dir, "ANALYZED", ReportLevel.SUCCESS));
+                    directoryProgressReport?.Report(new(dir, "ANALYZED", ReportLevel.Success));
                 }
-                catch (IOException) { directoryProgressReport?.Report(new(dir, "I/O ERROR", ReportLevel.ERROR)); }
-                catch (UnauthorizedAccessException) { directoryProgressReport?.Report(new(dir, "ACCESS ERROR", ReportLevel.ERROR)); }
-                catch (Exception) { directoryProgressReport?.Report(new(dir, "INVALID ERROR", ReportLevel.ERROR)); }
+                catch (IOException)
+                {
+                    directoryProgressReport?.Report(new(dir, "I/O ERROR", ReportLevel.Error));
+                }
+                catch (UnauthorizedAccessException)
+                {
+                    directoryProgressReport?.Report(new(dir, "ACCESS ERROR", ReportLevel.Error));
+                }
+                catch (Exception)
+                {
+                    directoryProgressReport?.Report(new(dir, "INVALID ERROR", ReportLevel.Error));
+                }
             }
-        }
     }
 
     public static async Task<List<CategoryInfo>> GetInfo(
@@ -61,35 +70,39 @@ public static class DirectoryService
         Categories[]? categories = null,
         bool isFastCompare = true,
         bool isFileNameCompare = false
-        )
+    )
     {
         List<CategoryInfo> categoryInfos = [];
-        int fileCount = 0;
+        var fileCount = 0;
         long fileWeights = 0;
-        foreach (Categories category in categories ?? Enum.GetValues<Categories>())
+        foreach (var category in categories ?? Enum.GetValues<Categories>())
         {
-            List<AnalyzedFile> files = await FileDatabase.GetFilesAsync(file => file.Category == category);
-            files = [.. files.Where(file => {
-                DirectoryInfo dir = file.File.Directory!;
-                return dir.IsChildDirectoryOfAny(sourceDirs)
-                    && (ignoreDirs == null
-                        || !dir.IsChildDirectoryOfAny(ignoreDirs));
-            })];
-            List<List<AnalyzedFile>> duplicates = FileService.GetFileDuplicates(files, isFastCompare, isFileNameCompare);
-            fileCount += files.Count + duplicates.Count;
-            long categoryWeight = files.Sum(file => file.Weight) + duplicates.Sum(list => list.Sum(file => file.Weight));
-            fileWeights += categoryWeight;
-            long categoryClearWeight = files.Sum(file => file.Weight) + duplicates.Sum(list => list[0].Weight);
-            categoryInfos.Add(new(category, 0, 0, categoryWeight, categoryClearWeight, files, duplicates));
+            var files = await FileDatabase.GetFilesAsync(file => file.Category == category);
+            files =
+            [
+                .. files.Where(file =>
+                {
+                    var dir = file.File.Directory!;
+                    return dir.IsChildDirectoryOfAny(sourceDirs)
+                           && (ignoreDirs == null
+                               || !dir.IsChildDirectoryOfAny(ignoreDirs));
+                })
+            ];
+            var duplicates = FileService.GetFileDuplicates(files, isFastCompare, isFileNameCompare);
+            var categoryInfo = new CategoryInfo()
+            {
+                Category = category,
+                Files = files,
+                Duplicates = duplicates
+            };
+            fileCount += categoryInfo.Count;
+            fileWeights += categoryInfo.Weight;
+            categoryInfos.Add(categoryInfo);
         }
-        return [.. categoryInfos.Select(categoryInfo =>
-        {
-            categoryInfo.CountPercentages = (float)Math.Round(
-                (float)(categoryInfo.Files.Count + categoryInfo.Duplicates.Count) / fileCount, 4);
-            categoryInfo.WeightPercentages = (float)Math.Round(
-                (float)categoryInfo.Weight / fileWeights, 4);
-            return categoryInfo;
-        })];
+
+        foreach (var categoryInfo in categoryInfos)
+            categoryInfo.CalculatePercentages(fileCount, fileWeights);
+        return categoryInfos;
     }
 
     public static async Task<List<CategoryInfo>?> Organize(
@@ -102,19 +115,21 @@ public static class DirectoryService
         IProgress<FileProgressReport>? fileProcessReport = null)
     {
         DirectoryInfo dsaOutputDir = new(Path.Combine(outputDir.FullName, $"Organized Data {DateTime.Now}"));
-        long availableFreeSpace = new DriveInfo(outputDir.Root.FullName).AvailableFreeSpace;
-        List<CategoryInfo> categoryInfos = await GetInfo(sourceDirs, ignoreDirs, categories, isFastCompare, isFileNameCompare);
-        long requiredWeight = categoryInfos.Sum(categoryInfo => categoryInfo.ClearWeight);
+        var availableFreeSpace = new DriveInfo(outputDir.Root.FullName).AvailableFreeSpace;
+        var categoryInfos = await GetInfo(sourceDirs, ignoreDirs, categories, isFastCompare, isFileNameCompare);
+        var requiredWeight = categoryInfos.Sum(categoryInfo => categoryInfo.ClearWeight);
         if (requiredWeight > availableFreeSpace)
         {
-            progressReport?.Report(new("NOT ENOUGH SPACE", ReportLevel.ERROR));
+            progressReport?.Report(new("NOT ENOUGH SPACE", ReportLevel.Error));
             return null;
         }
-        foreach (CategoryInfo categoryInfo in categoryInfos)
+
+        foreach (var categoryInfo in categoryInfos)
         {
             categoryProgressReport?.Report(new(categoryInfo, "START"));
-            DirectoryInfo categoryOutputDir = new(Path.Combine(dsaOutputDir.FullName, categoryInfo.Category.ToString()));
-            foreach (AnalyzedFile analyzedFile in categoryInfo.Files)
+            DirectoryInfo categoryOutputDir =
+                new(Path.Combine(dsaOutputDir.FullName, categoryInfo.Category.ToString()));
+            foreach (var analyzedFile in categoryInfo.Files)
                 FileService.Copy(
                     analyzedFile,
                     categoryOutputDir,
@@ -124,8 +139,9 @@ public static class DirectoryService
                     duplicate[0],
                     categoryOutputDir,
                     fileProcessReport);
-            categoryProgressReport?.Report(new(categoryInfo, "ORGANIZED", ReportLevel.SUCCESS));
+            categoryProgressReport?.Report(new(categoryInfo, "ORGANIZED", ReportLevel.Success));
         }
+
         return categoryInfos;
     }
 }

@@ -1,5 +1,4 @@
 using DiskSpaceAnalyzerLib.Databases;
-using DiskSpaceAnalyzerLib.Models;
 using DiskSpaceAnalyzerLib.Services;
 using static DiskSpaceAnalyzerLib.Models.Category;
 
@@ -10,13 +9,13 @@ public class DirectoryServiceTest
     [Fact]
     public async Task SimpleAnalyzeTest()
     {
-        DirectoryInfo[] dirs = Helper.Prepare("SimpleAnalyzeTest");
+        var dirs = Helper.Prepare("SimpleAnalyzeTest");
         await DirectoryService.Analyze([dirs[0]]);
 
-        List<AnalyzedDirectory> directories = await DirectoryDatabase.GetDirectoriesAsync();
-        int fileCount = await FileDatabase.GetFilesCountAsync();
-        int directoryCount = directories.Count;
-        int dirFilesCount = directories.Select(x => x.FileCount).Sum();
+        var directories = await DirectoryDatabase.GetDirectoriesAsync();
+        var fileCount = await FileDatabase.GetFilesCountAsync();
+        var directoryCount = directories.Count;
+        var dirFilesCount = directories.Select(x => x.FileCount).Sum();
 
         Assert.True(fileCount == dirFilesCount);
         Assert.Equal(51, fileCount);
@@ -26,13 +25,13 @@ public class DirectoryServiceTest
     [Fact]
     public async Task SimpleAnalyzeRepeatTest()
     {
-        DirectoryInfo[] dirs = Helper.Prepare("SimpleAnalyzeTest", false);
+        var dirs = Helper.Prepare("SimpleAnalyzeTest", false);
         await DirectoryService.Analyze([dirs[0]]);
 
-        List<AnalyzedDirectory> directories = await DirectoryDatabase.GetDirectoriesAsync();
-        int fileCount = await FileDatabase.GetFilesCountAsync();
-        int directoryCount = directories.Count;
-        int dirFilesCount = directories.Select(x => x.FileCount).Sum();
+        var directories = await DirectoryDatabase.GetDirectoriesAsync();
+        var fileCount = await FileDatabase.GetFilesCountAsync();
+        var directoryCount = directories.Count;
+        var dirFilesCount = directories.Select(x => x.FileCount).Sum();
 
         Assert.True(fileCount == dirFilesCount);
         Assert.Equal(51, fileCount);
@@ -42,11 +41,11 @@ public class DirectoryServiceTest
     [Fact]
     public async Task IgnoreAnalyzeTest()
     {
-        DirectoryInfo[] dirs = Helper.Prepare("IgnoreAnalyzeTest");
+        var dirs = Helper.Prepare("IgnoreAnalyzeTest");
         await DirectoryService.Analyze([dirs[0]], [new(Path.Combine(dirs[0].FullName, "Разное"))]);
 
-        int fileCount = await FileDatabase.GetFilesCountAsync();
-        int directoryCount = await DirectoryDatabase.GetDirectoriesCountAsync();
+        var fileCount = await FileDatabase.GetFilesCountAsync();
+        var directoryCount = await DirectoryDatabase.GetDirectoriesCountAsync();
         Assert.Equal(41, fileCount);
         Assert.Equal(17, directoryCount);
     }
@@ -54,11 +53,11 @@ public class DirectoryServiceTest
     [Fact]
     public async Task IgnoreAnalyzeRepeatTest()
     {
-        DirectoryInfo[] dirs = Helper.Prepare("IgnoreAnalyzeTest", false);
+        var dirs = Helper.Prepare("IgnoreAnalyzeTest", false);
         await DirectoryService.Analyze([dirs[0]], [new(Path.Combine(dirs[0].FullName, "Разное"))]);
 
-        int fileCount = await FileDatabase.GetFilesCountAsync();
-        int directoryCount = await DirectoryDatabase.GetDirectoriesCountAsync();
+        var fileCount = await FileDatabase.GetFilesCountAsync();
+        var directoryCount = await DirectoryDatabase.GetDirectoriesCountAsync();
         Assert.Equal(41, fileCount);
         Assert.Equal(17, directoryCount);
     }
@@ -67,15 +66,15 @@ public class DirectoryServiceTest
     public async Task MultipleIgnoreAnalyzeTest()
     {
         DirectoryInfo[] dirs = Helper.Prepare("MultipleIgnoreAnalyzeTest");
-        string sourceDir = dirs[0].FullName;
+        var sourceDir = dirs[0].FullName;
 
         await DirectoryService.Analyze([dirs[0]], [
             new(Path.Combine(sourceDir, "Разное")),
-            new(Path.Combine(sourceDir, "Фото разные одно имя", "1")),
+            new(Path.Combine(sourceDir, "Фото разные одно имя", "1"))
         ]);
 
-        int fileCount = await FileDatabase.GetFilesCountAsync();
-        int directoryCount = await DirectoryDatabase.GetDirectoriesCountAsync();
+        var fileCount = await FileDatabase.GetFilesCountAsync();
+        var directoryCount = await DirectoryDatabase.GetDirectoriesCountAsync();
         Assert.Equal(40, fileCount);
         Assert.Equal(15, directoryCount);
     }
@@ -83,159 +82,160 @@ public class DirectoryServiceTest
     [Fact]
     public async Task GetInfoTest()
     {
-        DirectoryInfo[] dirs = Helper.Prepare("GetInfoTest"); await DirectoryService.Analyze([dirs[0]]);
-        List<CategoryInfo> categories = await DirectoryService.GetInfo([dirs[0]]);
+        var dirs = Helper.Prepare("GetInfoTest");
+        await DirectoryService.Analyze([dirs[0]]);
+        var categories = await DirectoryService.GetInfo([dirs[0]]);
 
-        CategoryInfo raster = categories[(int)Categories.Raster];
-        Assert.Empty(raster.Files);
-        Assert.Equal(5, raster.Duplicates.Count);
+        var raster = categories[(int)Categories.Raster];
+        Assert.Equal(15, raster.Count);
+        Assert.Equal(5, raster.ClearCount);
 
-        CategoryInfo vector = categories[(int)Categories.Vector];
-        Assert.Empty(vector.Files);
-        Assert.Empty(vector.Duplicates);
+        var vector = categories[(int)Categories.Vector];
+        Assert.Equal(0, vector.Count);
+        Assert.Equal(0, vector.ClearCount);
 
-        CategoryInfo text = categories[(int)Categories.Text];
-        Assert.Single(text.Files);
-        Assert.Equal(3, text.Duplicates.Count);
+        var text = categories[(int)Categories.Text];
+        Assert.Equal(7, text.Count);
+        Assert.Equal(4, text.ClearCount);
 
-        CategoryInfo audio = categories[(int)Categories.Audio];
-        Assert.Empty(audio.Files);
-        Assert.Equal(5, audio.Duplicates.Count);
+        var audio = categories[(int)Categories.Audio];
+        Assert.Equal(15, audio.Count);
+        Assert.Equal(5, audio.ClearCount);
 
-        CategoryInfo video = categories[(int)Categories.Video];
-        Assert.Empty(video.Files);
-        Assert.Empty(video.Duplicates);
+        var video = categories[(int)Categories.Video];
+        Assert.Equal(0, video.Count);
+        Assert.Equal(0, video.ClearCount);
 
-        CategoryInfo eBook = categories[(int)Categories.EBook];
-        Assert.Empty(eBook.Files);
-        Assert.Empty(eBook.Duplicates);
+        var eBook = categories[(int)Categories.EBook];
+        Assert.Equal(0, eBook.Count);
+        Assert.Equal(0, eBook.ClearCount);
 
-        CategoryInfo cad = categories[(int)Categories.CAD];
-        Assert.Empty(cad.Files);
-        Assert.Empty(cad.Duplicates);
+        var cad = categories[(int)Categories.Cad];
+        Assert.Equal(0, cad.Count);
+        Assert.Equal(0, cad.ClearCount);
 
-        CategoryInfo presentation = categories[(int)Categories.Presentation];
-        Assert.Empty(presentation.Files);
-        Assert.Empty(presentation.Duplicates);
+        var presentation = categories[(int)Categories.Presentation];
+        Assert.Equal(0, presentation.Count);
+        Assert.Equal(0, presentation.ClearCount);
 
-        CategoryInfo spreadsheet = categories[(int)Categories.Spreadsheet];
-        Assert.Empty(spreadsheet.Files);
-        Assert.Empty(spreadsheet.Duplicates);
+        var spreadsheet = categories[(int)Categories.Spreadsheet];
+        Assert.Equal(0, spreadsheet.Count);
+        Assert.Equal(0, spreadsheet.ClearCount);
 
-        CategoryInfo database = categories[(int)Categories.Database];
-        Assert.Empty(database.Files);
-        Assert.Empty(database.Duplicates);
+        var database = categories[(int)Categories.Database];
+        Assert.Equal(0, database.Count);
+        Assert.Equal(0, database.ClearCount);
 
-        CategoryInfo archive = categories[(int)Categories.Archive];
-        Assert.Empty(archive.Files);
-        Assert.Single(archive.Duplicates);
+        var archive = categories[(int)Categories.Archive];
+        Assert.Equal(2, archive.Count);
+        Assert.Equal(1, archive.ClearCount);
 
-        CategoryInfo web = categories[(int)Categories.Web];
-        Assert.Empty(web.Files);
-        Assert.Equal(3, web.Duplicates.Count);
+        var web = categories[(int)Categories.Web];
+        Assert.Equal(6, web.Count);
+        Assert.Equal(3, web.ClearCount);
 
-        CategoryInfo developer = categories[(int)Categories.Developer];
-        Assert.Empty(developer.Files);
-        Assert.Empty(developer.Duplicates);
+        var developer = categories[(int)Categories.Developer];
+        Assert.Equal(0, developer.Count);
+        Assert.Equal(0, developer.ClearCount);
 
-        CategoryInfo system = categories[(int)Categories.System];
-        Assert.Empty(system.Files);
-        Assert.Equal(2, system.Duplicates.Count);
+        var system = categories[(int)Categories.System];
+        Assert.Equal(4, system.Count);
+        Assert.Equal(2, system.ClearCount);
 
-        CategoryInfo executables = categories[(int)Categories.Executables];
-        Assert.Empty(executables.Files);
-        Assert.Empty(executables.Duplicates);
+        var executables = categories[(int)Categories.Executables];
+        Assert.Equal(0, executables.Count);
+        Assert.Equal(0, executables.ClearCount);
 
-        CategoryInfo settings = categories[(int)Categories.Settings];
-        Assert.Empty(settings.Files);
-        Assert.Empty(settings.Duplicates);
+        var settings = categories[(int)Categories.Settings];
+        Assert.Equal(0, settings.Count);
+        Assert.Equal(0, settings.ClearCount);
 
-        CategoryInfo other = categories[(int)Categories.Other];
-        Assert.Empty(other.Files);
-        Assert.Single(other.Duplicates);
+        var other = categories[(int)Categories.Other];
+        Assert.Equal(2, other.Count);
+        Assert.Equal(1, other.ClearCount);
 
-        CategoryInfo error = categories[(int)Categories.Error];
-        Assert.Empty(error.Files);
-        Assert.Empty(error.Duplicates);
+        var error = categories[(int)Categories.Error];
+        Assert.Equal(0, error.Count);
+        Assert.Equal(0, error.ClearCount);
     }
 
     [Fact]
     public async Task WithFileNameCompareGetInfoTest()
     {
-        DirectoryInfo[] dirs = Helper.Prepare("WithFileNameCompareGetInfoTest");
+        var dirs = Helper.Prepare("WithFileNameCompareGetInfoTest");
 
         await DirectoryService.Analyze([dirs[0]]);
-        List<CategoryInfo> categories = await DirectoryService.GetInfo([dirs[0]], isFileNameCompare: true);
+        var categories = await DirectoryService.GetInfo([dirs[0]], isFileNameCompare: true);
 
-        CategoryInfo raster = categories[(int)Categories.Raster];
+        var raster = categories[(int)Categories.Raster];
         Assert.Equal(12, raster.Files.Count);
         Assert.Single(raster.Duplicates);
 
-        CategoryInfo vector = categories[(int)Categories.Vector];
+        var vector = categories[(int)Categories.Vector];
         Assert.Empty(vector.Files);
         Assert.Empty(vector.Duplicates);
 
-        CategoryInfo text = categories[(int)Categories.Text];
+        var text = categories[(int)Categories.Text];
         Assert.Single(text.Files);
         Assert.Equal(3, text.Duplicates.Count);
 
-        CategoryInfo audio = categories[(int)Categories.Audio];
+        var audio = categories[(int)Categories.Audio];
         Assert.Equal(12, audio.Files.Count);
         Assert.Single(audio.Duplicates);
 
-        CategoryInfo video = categories[(int)Categories.Video];
+        var video = categories[(int)Categories.Video];
         Assert.Empty(video.Files);
         Assert.Empty(video.Duplicates);
 
-        CategoryInfo eBook = categories[(int)Categories.EBook];
+        var eBook = categories[(int)Categories.EBook];
         Assert.Empty(eBook.Files);
         Assert.Empty(eBook.Duplicates);
 
-        CategoryInfo cad = categories[(int)Categories.CAD];
+        var cad = categories[(int)Categories.Cad];
         Assert.Empty(cad.Files);
         Assert.Empty(cad.Duplicates);
 
-        CategoryInfo presentation = categories[(int)Categories.Presentation];
+        var presentation = categories[(int)Categories.Presentation];
         Assert.Empty(presentation.Files);
         Assert.Empty(presentation.Duplicates);
 
-        CategoryInfo spreadsheet = categories[(int)Categories.Spreadsheet];
+        var spreadsheet = categories[(int)Categories.Spreadsheet];
         Assert.Empty(spreadsheet.Files);
         Assert.Empty(spreadsheet.Duplicates);
 
-        CategoryInfo database = categories[(int)Categories.Database];
+        var database = categories[(int)Categories.Database];
         Assert.Empty(database.Files);
         Assert.Empty(database.Duplicates);
 
-        CategoryInfo archive = categories[(int)Categories.Archive];
+        var archive = categories[(int)Categories.Archive];
         Assert.Empty(archive.Files);
         Assert.Single(archive.Duplicates);
 
-        CategoryInfo web = categories[(int)Categories.Web];
+        var web = categories[(int)Categories.Web];
         Assert.Empty(web.Files);
         Assert.Equal(3, web.Duplicates.Count);
 
-        CategoryInfo developer = categories[(int)Categories.Developer];
+        var developer = categories[(int)Categories.Developer];
         Assert.Empty(developer.Files);
         Assert.Empty(developer.Duplicates);
 
-        CategoryInfo system = categories[(int)Categories.System];
+        var system = categories[(int)Categories.System];
         Assert.Empty(system.Files);
         Assert.Equal(2, system.Duplicates.Count);
 
-        CategoryInfo executables = categories[(int)Categories.Executables];
+        var executables = categories[(int)Categories.Executables];
         Assert.Empty(executables.Files);
         Assert.Empty(executables.Duplicates);
 
-        CategoryInfo settings = categories[(int)Categories.Settings];
+        var settings = categories[(int)Categories.Settings];
         Assert.Empty(settings.Files);
         Assert.Empty(settings.Duplicates);
 
-        CategoryInfo other = categories[(int)Categories.Other];
+        var other = categories[(int)Categories.Other];
         Assert.Empty(other.Files);
         Assert.Single(other.Duplicates);
 
-        CategoryInfo error = categories[(int)Categories.Error];
+        var error = categories[(int)Categories.Error];
         Assert.Empty(error.Files);
         Assert.Empty(error.Duplicates);
     }
@@ -243,7 +243,7 @@ public class DirectoryServiceTest
     [Fact]
     public async Task SimpleOrganizeTest()
     {
-        DirectoryInfo[] dirs = Helper.Prepare("SimpleOrganizeTest");
+        var dirs = Helper.Prepare("SimpleOrganizeTest");
         await DirectoryService.Analyze([dirs[0]]);
         await DirectoryService.Organize(dirs[1], [dirs[0]]);
     }
@@ -251,7 +251,7 @@ public class DirectoryServiceTest
     [Fact]
     public async Task WithFileNameCompareOrganizeTest()
     {
-        DirectoryInfo[] dirs = Helper.Prepare("WithFileNameCompareOrganizeTest");
+        var dirs = Helper.Prepare("WithFileNameCompareOrganizeTest");
         await DirectoryService.Analyze([dirs[0]]);
         await DirectoryService.Organize(dirs[1], [dirs[0]], isFileNameCompare: true);
     }
@@ -259,7 +259,7 @@ public class DirectoryServiceTest
     [Fact]
     public async Task CategoryFilterOrganizeTest()
     {
-        DirectoryInfo[] dirs = Helper.Prepare("CategoryFilterOrganizeTest");
+        var dirs = Helper.Prepare("CategoryFilterOrganizeTest");
         await DirectoryService.Analyze([dirs[0]]);
         await DirectoryService.Organize(dirs[1], [dirs[0]], categories: [Categories.Raster, Categories.Archive]);
     }

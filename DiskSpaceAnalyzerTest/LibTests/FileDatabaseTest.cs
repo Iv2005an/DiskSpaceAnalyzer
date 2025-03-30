@@ -1,6 +1,4 @@
 using DiskSpaceAnalyzerLib.Databases;
-using DiskSpaceAnalyzerLib.Models;
-using DiskSpaceAnalyzerLib.Services;
 
 namespace DiskSpaceAnalyzerTest.LibTests;
 
@@ -29,11 +27,8 @@ public class FileDatabaseTest
     {
         Helper.Prepare("FileCountTest");
 
-        for (int i = 0; i < 5; i++)
-        {
-            await FileDatabase.AddFileAsync(new());
-        }
-        List<AnalyzedFile> directories = await FileDatabase.GetFilesAsync();
+        for (var i = 0; i < 5; i++) await FileDatabase.AddFileAsync(new());
+        var directories = await FileDatabase.GetFilesAsync();
 
         Assert.Equal(5, directories.Count);
         Assert.Equal(5, await FileDatabase.GetFilesCountAsync());

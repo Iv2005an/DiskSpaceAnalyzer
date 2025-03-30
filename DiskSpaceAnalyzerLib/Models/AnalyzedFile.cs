@@ -1,6 +1,6 @@
-﻿using SQLite;
-using DiskSpaceAnalyzerLib.Extensions;
+﻿using DiskSpaceAnalyzerLib.Extensions;
 using DiskSpaceAnalyzerLib.Services;
+using SQLite;
 using static DiskSpaceAnalyzerLib.Models.Category;
 
 namespace DiskSpaceAnalyzerLib.Models;
@@ -12,7 +12,7 @@ public class AnalyzedFile
     public FileInfo File
     {
         get => new(Path.Combine(DirectoryPath, Name));
-        set
+        init
         {
             DirectoryPath = value.DirectoryName!;
             Name = value.Name;
@@ -24,29 +24,24 @@ public class AnalyzedFile
         }
     }
 
-    [Column("id"), PrimaryKey, AutoIncrement]
-    public int ID { get; set; }
+    [Column("id")]
+    [PrimaryKey]
+    [AutoIncrement]
+    public int Id { get; init; }
 
-    [Column("directory_path")]
-    public string DirectoryPath { get; set; } = "";
+    [Column("directory_path")] public string DirectoryPath { get; init; } = "";
 
-    [Column("name")]
-    public string Name { get; set; } = "";
+    [Column("name")] public string Name { get; init; } = "";
 
-    [Column("analyze_time_utc")]
-    public DateTime AnalyzeTimeUtc { get; set; }
+    [Column("analyze_time_utc")] public DateTime AnalyzeTimeUtc { get; init; }
 
-    [Column("weight")]
-    public long Weight { get; set; }
+    [Column("weight")] public long Weight { get; init; }
 
-    [Column("category")]
-    public Categories Category { get; set; }
+    [Column("category")] public Categories Category { get; init; }
 
-    [Column("edit_time")]
-    public DateTime EditTimeUtc { get; set; }
+    [Column("edit_time")] public DateTime EditTimeUtc { get; init; }
 
-    [Column("checksum")]
-    public string Checksum { get; set; } = "";
+    [Column("checksum")] public string Checksum { get; init; } = "";
 
     public override string ToString() => File.FullName;
 }

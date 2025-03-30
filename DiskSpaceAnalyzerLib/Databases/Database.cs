@@ -5,7 +5,15 @@ namespace DiskSpaceAnalyzerLib.Databases;
 
 public static class Database
 {
+    private const SQLiteOpenFlags Flags =
+        SQLiteOpenFlags.ReadWrite |
+        SQLiteOpenFlags.Create |
+        SQLiteOpenFlags.SharedCache;
+
     private static string _databaseFilename = "DiskSpaceAnalyzerDB.db3";
+    private static string? _databasePath;
+    private static SQLiteAsyncConnection? _connection;
+
     public static string DatabaseFilename
     {
         get => _databaseFilename;
@@ -15,7 +23,7 @@ public static class Database
             _connection = null;
         }
     }
-    private static string? _databasePath;
+
     public static string DatabasePath
     {
         get => Path.Combine(_databasePath ?? Environment.CurrentDirectory, DatabaseFilename);
@@ -25,23 +33,16 @@ public static class Database
             _connection = null;
         }
     }
-    public const SQLiteOpenFlags Flags =
-    SQLiteOpenFlags.ReadWrite |
-    SQLiteOpenFlags.Create |
-    SQLiteOpenFlags.SharedCache;
-    private static SQLiteAsyncConnection? _connection;
+
     public static SQLiteAsyncConnection Connection
     {
         get
         {
-            if (_connection is null)
-            {
-                _connection = new SQLiteAsyncConnection(DatabasePath, Flags);
-                _connection.CreateTableAsync<AnalyzedFile>().Wait();
-                _connection.CreateTableAsync<AnalyzedDirectory>().Wait();
-            }
+            if (_connection is not null) return _connection;
+            _connection = new(DatabasePath, Flags);
+            _connection.CreateTableAsync<AnalyzedFile>().Wait();
+            _connection.CreateTableAsync<AnalyzedDirectory>().Wait();
             return _connection;
         }
     }
-
 }

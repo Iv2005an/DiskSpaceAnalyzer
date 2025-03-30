@@ -1,7 +1,7 @@
 namespace DiskSpaceAnalyzerLib.Models;
 
-public class ProgressReport(string message, ReportLevel level = ReportLevel.INFO)
+public class ProgressReport(string message, ReportLevel level = ReportLevel.Info)
 {
-    public string Status { get; } = message;
+    public string Message { get; } = message;
     public ReportLevel Level { get; } = level;
 }

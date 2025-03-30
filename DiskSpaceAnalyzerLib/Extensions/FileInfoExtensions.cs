@@ -7,14 +7,14 @@ public static class FileInfoExtensions
 {
     public static Categories GetCategory(this FileInfo file)
     {
-        string extension = file.Extension.Replace(".", "").ToUpper();
+        var extension = file.Extension.Replace(".", "").ToUpper();
         if (Raster.GetExtensions().Contains(extension)) return Raster;
         if (Vector.GetExtensions().Contains(extension)) return Vector;
         if (Text.GetExtensions().Contains(extension)) return Text;
         if (Audio.GetExtensions().Contains(extension)) return Audio;
         if (Video.GetExtensions().Contains(extension)) return Video;
         if (EBook.GetExtensions().Contains(extension)) return EBook;
-        if (CAD.GetExtensions().Contains(extension)) return CAD;
+        if (Cad.GetExtensions().Contains(extension)) return Cad;
         if (Presentation.GetExtensions().Contains(extension)) return Presentation;
         if (Spreadsheet.GetExtensions().Contains(extension)) return Spreadsheet;
         if (Database.GetExtensions().Contains(extension)) return Database;
