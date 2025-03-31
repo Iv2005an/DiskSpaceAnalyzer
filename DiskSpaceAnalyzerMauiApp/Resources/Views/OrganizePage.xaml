@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:DiskSpaceAnalyzerMauiApp.Resources.ViewModels"
+             x:DataType="viewModels:OrganizeViewModel"
+             x:Class="DiskSpaceAnalyzerMauiApp.Resources.Views.OrganizePage"
+             Title="Выполняется организация">
+    <Grid Margin="16,0,16,16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Border Grid.Row="0"
+                Margin="0,8"
+                Style="{StaticResource BorderStyle}">
+            <CollectionView ItemsSource="{Binding OrganizedPaths, Mode=TwoWay}"
+                            SelectionMode="None" />
+        </Border>
+        <StackLayout Grid.Row="1"
+                     Margin="0,8,0,0"
+                     Spacing="10">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <ProgressBar Progress="{Binding OrganizeProgressValue}" />
+                <Label Grid.Column="1"
+                       Margin="8,0,0,0"
+                       Style="{StaticResource MediumLabelStyle}">
+                    <Label.Text>
+                        <MultiBinding StringFormat="{}{0}/{1} {2:P2}">
+                            <Binding Path="OrganizedFileCount" />
+                            <Binding Path="AllFileCount" />
+                            <Binding Path="OrganizeProgressValue" />
+                        </MultiBinding>
+                    </Label.Text>
+                </Label>
+            </Grid>
+            <Button Text="Готово"
+                    HorizontalOptions="Fill"
+                    Style="{StaticResource PrimaryButtonStyle}"
+                    IsEnabled="{Binding CanComplete}"
+                    Clicked="Complete_OnClicked" />
+        </StackLayout>
+    </Grid>
+</ContentPage>

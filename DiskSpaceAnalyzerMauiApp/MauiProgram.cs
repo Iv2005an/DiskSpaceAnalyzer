@@ -21,6 +21,8 @@ namespace DiskSpaceAnalyzerMauiApp
             builder.Services.AddSingleton<AnalyzeViewModel>();
             builder.Services.AddSingleton<InfoPage>();
             builder.Services.AddSingleton<InfoViewModel>();
+            builder.Services.AddSingleton<OrganizePage>();
+            builder.Services.AddSingleton<OrganizeViewModel>();
 #if DEBUG
             builder.Logging.AddDebug();
 #endif

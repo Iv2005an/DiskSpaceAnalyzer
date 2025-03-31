@@ -17,4 +17,7 @@
     <ShellContent
         ContentTemplate="{DataTemplate local:InfoPage}"
         Route="InfoPage" />
+    <ShellContent
+        ContentTemplate="{DataTemplate local:OrganizePage}"
+        Route="OrganizePage" />
 </Shell>
