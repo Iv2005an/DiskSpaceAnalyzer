@@ -14,7 +14,8 @@ public static class DirectoryService
         foreach (var dir in sourceDirs)
         {
             var analyzedDir = new AnalyzedDirectory { Directory = dir };
-            if (dir.IsChildDirectoryOfAny(ignoreDirs)) directoryProgressReport?.Report(new(analyzedDir, "IGNORED"));
+            if (dir.IsChildDirectoryOfAny(ignoreDirs))
+                directoryProgressReport?.Report(new(analyzedDir, "IGNORED"));
             else
             {
                 List<string> directoriesToDelete = [dir.Root.FullName, dir.FullName];
@@ -95,7 +96,7 @@ public static class DirectoryService
                 })
             ];
             var duplicates = FileService.GetFileDuplicates(files, isFastCompare, isFileNameCompare);
-            var categoryInfo = new CategoryInfo()
+            var categoryInfo = new CategoryInfo
             {
                 Category = category,
                 Files = files,
@@ -115,14 +116,15 @@ public static class DirectoryService
         DirectoryInfo outputDir,
         List<DirectoryInfo> sourceDirs, List<DirectoryInfo>? ignoreDirs = null,
         Categories[]? categories = null,
+        List<CategoryInfo>? categoryInfos = null,
         bool isFastCompare = true, bool isFileNameCompare = false,
         IProgress<ProgressReport>? progressReport = null,
         IProgress<CategoryProgressReport>? categoryProgressReport = null,
-        IProgress<FileProgressReport>? fileProcessReport = null)
+        IProgress<FileProgressReport>? fileProgressReport = null)
     {
         DirectoryInfo dsaOutputDir = new(Path.Combine(outputDir.FullName, $"Organized Data {DateTime.Now}"));
         var availableFreeSpace = new DriveInfo(outputDir.Root.FullName).AvailableFreeSpace;
-        var categoryInfos = await GetInfo(sourceDirs, ignoreDirs, categories, isFastCompare, isFileNameCompare);
+        categoryInfos ??= await GetInfo(sourceDirs, ignoreDirs, categories, isFastCompare, isFileNameCompare);
         var requiredWeight = categoryInfos.Sum(categoryInfo => categoryInfo.ClearWeight);
         if (requiredWeight > availableFreeSpace)
         {
@@ -139,12 +141,12 @@ public static class DirectoryService
                 FileService.Copy(
                     analyzedFile,
                     categoryOutputDir,
-                    fileProcessReport);
-            foreach (List<AnalyzedFile> duplicate in categoryInfo.Duplicates)
+                    fileProgressReport);
+            foreach (var duplicate in categoryInfo.Duplicates)
                 FileService.Copy(
                     duplicate[0],
                     categoryOutputDir,
-                    fileProcessReport);
+                    fileProgressReport);
             categoryProgressReport?.Report(new(categoryInfo, "ORGANIZED", ReportLevel.Success));
         }
 
