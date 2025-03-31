@@ -31,6 +31,12 @@ public partial class InfoViewModel : ObservableObject, IQueryAttributable
     [RelayCommand]
     private async Task GetInfo()
     {
+        CanOrganize = false;
+
+        OrganizeCategories = [];
+        OutputPath = "Выбирете папку сохранения";
+        RequiredDiskSpace = "";
+
         var dirs = InputPaths.Select(path => new DirectoryInfo(path)).ToList();
         var ignoreDirs = InputIgnorePaths.Select(path => new DirectoryInfo(path)).ToList();
         var categoryInfos = await DirectoryService.GetInfo(dirs, ignoreDirs);
