@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:DiskSpaceAnalyzerMauiApp.Resources.Models"
+             xmlns:viewModels="clr-namespace:DiskSpaceAnalyzerMauiApp.Resources.ViewModels"
+             x:DataType="viewModels:InfoViewModel"
+             x:Class="DiskSpaceAnalyzerMauiApp.Resources.Views.InfoPage"
+             Title="Организация пространства">
+    <Grid Margin="16,0,16,16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Label Grid.Row="0" Text="Категории для организации:" Style="{StaticResource TitleLabelStyle}" />
+        <Border Grid.Row="1"
+                Margin="0,8"
+                Style="{StaticResource BorderStyle}">
+            <CollectionView ItemsSource="{Binding OrganizeCategories, Mode=TwoWay}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:OrganizeCategory">
+                        <StackLayout Orientation="Horizontal"
+                                     Spacing="10"
+                                     MinimumHeightRequest="50">
+                            <CheckBox IsChecked="{Binding Selected}"
+                                      Margin="20,0,0,0" />
+                            <!-- <Rectangle WidthRequest="30" -->
+                            <!--            HeightRequest="30" -->
+                            <!--            RadiusX="3" -->
+                            <!--            RadiusY="3" -->
+                            <!--            Fill="{Binding Color}" /> -->
+                            <Label Text="{Binding Name}"
+                                   VerticalTextAlignment="Center"
+                                   Style="{StaticResource MediumLabelStyle}"
+                                   HorizontalOptions="FillAndExpand" />
+                            <Label VerticalTextAlignment="Center"
+                                   Margin="0,0,20,0"
+                                   Style="{StaticResource InfoLabelStyle}">
+                                <Label.Text>
+                                    <MultiBinding
+                                        StringFormat="{}Количество(Чистое): {0}({1}) · Вес(Чистый): {2}({3}) · Вес %: {4:P0} · Количество %:{5:P0}">
+                                        <Binding Path="FileCount" />
+                                        <Binding Path="ClearFileCount" />
+                                        <Binding Path="Weight" />
+                                        <Binding Path="ClearWeight" />
+                                        <Binding Path="CategoryInfo.WeightPercentages" />
+                                        <Binding Path="CategoryInfo.CountPercentages" />
+                                    </MultiBinding>
+                                </Label.Text>
+                            </Label>
+                        </StackLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </Border>
+        <StackLayout Grid.Row="2" Spacing="10">
+            <Label Text="{Binding RequiredDiskSpace, StringFormat=Будет занято: {0}}"
+                   HorizontalOptions="End"
+                   Style="{StaticResource MediumLabelStyle}" />
+            <Label Text="{Binding OutputPath}"
+                   Style="{StaticResource MediumLabelStyle}" />
+            <Button Text="Выбрать папку сохранения"
+                    Style="{StaticResource BaseButtonStyle}"
+                    Command="{Binding SelectFolderCommand}" />
+            <Button
+                Text="Организовать"
+                HorizontalOptions="Fill"
+                Style="{StaticResource PrimaryButtonStyle}"
+                IsEnabled="{Binding CanOrganize}"
+                Clicked="RunOrganize_OnClicked" />
+            <Button
+                Text="Повторить анализ"
+                HorizontalOptions="Fill"
+                Style="{StaticResource BaseButtonStyle}"
+                Clicked="GoAnalyze_OnClicked" />
+        </StackLayout>
+    </Grid>
+</ContentPage>

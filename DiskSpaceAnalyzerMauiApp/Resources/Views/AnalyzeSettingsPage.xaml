@@ -17,7 +17,8 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <Label Grid.Row="0" Text="Директории для анализа:" FontSize="Large" />
+        <Label Grid.Row="0" Text="Директории для анализа:"
+               Style="{StaticResource TitleLabelStyle}" />
         <Border Grid.Row="1"
                 Margin="0,8"
                 Style="{StaticResource BorderStyle}">
@@ -33,7 +34,8 @@
                     Style="{StaticResource BaseButtonStyle}"
                     Command="{Binding AddPathCommand}" />
         </HorizontalStackLayout>
-        <Label Grid.Row="3" Text="Игнорируемые директории:" FontSize="Large" />
+        <Label Grid.Row="3" Text="Игнорируемые директории:"
+               Style="{StaticResource TitleLabelStyle}" />
         <Border Grid.Row="4"
                 Margin="0,8"
                 Style="{StaticResource BorderStyle}">
