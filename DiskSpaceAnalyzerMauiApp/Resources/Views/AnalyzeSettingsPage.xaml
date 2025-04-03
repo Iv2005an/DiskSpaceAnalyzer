@@ -57,7 +57,7 @@
                      Spacing="5"
                      Margin="0,8,0,0">
             <Label Text="Повторить анализ?" VerticalTextAlignment="Center" />
-            <Switch IsToggled="{Binding RepeatAnalyze}" />
+            <Switch IsToggled="{Binding RepeatAnalyze}" Margin="{OnPlatform WinUI='0,0,-110,0'}"/>
         </StackLayout>
         <StackLayout Grid.Row="7"
                      Margin="0,8,0,0">

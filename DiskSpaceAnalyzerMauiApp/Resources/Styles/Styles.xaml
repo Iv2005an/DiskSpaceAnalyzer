@@ -36,7 +36,7 @@
         <Setter Property="FontSize" Value="16" />
         <Setter Property="CornerRadius" Value="5" />
         <Setter Property="MinimumWidthRequest" Value="84" />
-        <Setter Property="HeightRequest" Value="26" />
+        <Setter Property="HeightRequest" Value="{OnPlatform MacCatalyst=26}" />
     </Style>
     <Style x:Key="BaseButtonStyle" TargetType="Button"
            BasedOn="{StaticResource ButtonStyle}">

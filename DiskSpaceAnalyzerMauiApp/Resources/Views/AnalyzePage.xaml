@@ -15,6 +15,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Label Grid.Row="0" Text="Проанализированные директории:" Style="{StaticResource TitleLabelStyle}" />
         <Border Grid.Row="1"
@@ -37,26 +38,25 @@
             <CollectionView ItemsSource="{Binding ErrorPaths, Mode=TwoWay}"
                             SelectionMode="None" />
         </Border>
-        <StackLayout Grid.Row="6"
-                     Margin="0,8,0,0"
-                     Spacing="10">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                <ProgressBar Progress="{Binding AnalyzeProgressValue}" />
-                <Label Grid.Column="1"
+        <Grid Grid.Row="6"
+              Margin="0,8,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <ProgressBar Progress="{Binding AnalyzeProgressValue}" />
+            <Label Grid.Column="1"
                        Margin="8,0,0,0"
                        Style="{StaticResource MediumLabelStyle}">
-                    <Label.Text>
-                        <MultiBinding StringFormat="{}{0}/{1}">
-                            <Binding Path="AnalyzedDirsCount" />
-                            <Binding Path="AllDirsCount" />
-                        </MultiBinding>
-                    </Label.Text>
-                </Label>
-            </Grid>
+                <Label.Text>
+                    <MultiBinding StringFormat="{}{0}/{1}">
+                        <Binding Path="AnalyzedDirsCount" />
+                        <Binding Path="AllDirsCount" />
+                    </MultiBinding>
+                </Label.Text>
+            </Label>
+        </Grid>
+        <StackLayout Grid.Row="7" Spacing="10">
             <Button
                 Text="Перейти к организации пространства"
                 HorizontalOptions="Fill"
