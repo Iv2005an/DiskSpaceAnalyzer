@@ -39,6 +39,7 @@ public static class DirectoryService
                         filesWeight += file.Length;
                         tasks.Add(FileDatabase.AddFileAsync(new() { File = file }));
                     }
+                    await Task.WhenAll(tasks);
 
                     var dirs = dir.GetDirectories();
                     analyzedDir.FileCount = files.Length;
@@ -51,10 +52,9 @@ public static class DirectoryService
                     else
                         directoryProgressReport?.Report(new(analyzedDir, "IGNORED"));
 
-                    tasks.Add(Analyze([.. dirs], ignoreDirs, directoryProgressReport));
-                    await Task.WhenAll(tasks);
-
                     if (!isIgnored) await DirectoryDatabase.AddDirectoryAsync(analyzedDir);
+
+                    await Analyze([.. dirs], ignoreDirs, directoryProgressReport);
                 }
                 catch (IOException)
                 {
