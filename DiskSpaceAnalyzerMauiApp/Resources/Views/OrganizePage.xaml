@@ -41,7 +41,9 @@
             </Grid>
             <Button Text="Готово"
                     HorizontalOptions="Fill"
-                    Style="{StaticResource PrimaryButtonStyle}"
+                    Style="{OnPlatform
+                        WinUI={StaticResource PrimaryButtonWinStyle},
+                        MacCatalyst={StaticResource PrimaryButtonStyle}}"
                     IsEnabled="{Binding CanComplete}"
                     Clicked="Complete_OnClicked" />
         </StackLayout>

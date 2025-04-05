@@ -27,11 +27,13 @@
         </Border>
         <HorizontalStackLayout Grid.Row="2" Spacing="10" HorizontalOptions="End">
             <Button Text="Удалить"
-                    Style="{StaticResource DestructiveButtonStyle}"
+                    Style="{OnPlatform 
+                        WinUI={StaticResource DestructiveButtonWinStyle}, 
+                        MacCatalyst={StaticResource DestructiveButtonStyle}}"
                     Command="{Binding DeletePathCommand}"
                     CommandParameter="{Binding SelectedPath}" />
             <Button Text="Добавить"
-                    Style="{StaticResource BaseButtonStyle}"
+                    Style="{OnPlatform MacCatalyst={StaticResource BaseButtonStyle}}"
                     Command="{Binding AddPathCommand}" />
         </HorizontalStackLayout>
         <Label Grid.Row="3" Text="Игнорируемые директории:"
@@ -44,11 +46,13 @@
         </Border>
         <HorizontalStackLayout Grid.Row="5" Spacing="10" HorizontalOptions="End">
             <Button Text="Удалить"
-                    Style="{StaticResource DestructiveButtonStyle}"
+                    Style="{OnPlatform 
+                        WinUI={StaticResource DestructiveButtonWinStyle}, 
+                        MacCatalyst={StaticResource DestructiveButtonStyle}}"
                     Command="{Binding DeleteIgnorePathCommand}"
                     CommandParameter="{Binding SelectedIgnorePath}" />
             <Button Text="Добавить"
-                    Style="{StaticResource BaseButtonStyle}"
+                    Style="{OnPlatform MacCatalyst={StaticResource BaseButtonStyle}}"
                     Command="{Binding AddIgnorePathCommand}" />
         </HorizontalStackLayout>
         <StackLayout Grid.Row="6"
@@ -64,7 +68,9 @@
             <Button
                 Text="Выполнить анализ"
                 HorizontalOptions="Fill"
-                Style="{StaticResource PrimaryButtonStyle}"
+                Style="{OnPlatform 
+                    WinUI={StaticResource PrimaryButtonWinStyle},
+                    MacCatalyst={StaticResource PrimaryButtonStyle}}"
                 IsEnabled="{Binding CanAnalyze}"
                 Clicked="RunAnalyze_OnClicked" />
         </StackLayout>

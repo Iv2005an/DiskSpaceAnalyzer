@@ -60,13 +60,15 @@
             <Button
                 Text="Перейти к организации пространства"
                 HorizontalOptions="Fill"
-                Style="{StaticResource PrimaryButtonStyle}"
+                Style="{OnPlatform
+                    WinUI={StaticResource PrimaryButtonWinStyle},
+                    MacCatalyst={StaticResource PrimaryButtonStyle}}"
                 IsEnabled="{Binding CanOrganize}"
                 Clicked="GoToOrganize_OnClicked" />
             <Button
                 Text="Назад"
                 HorizontalOptions="Fill"
-                Style="{StaticResource BaseButtonStyle}"
+                Style="{OnPlatform MacCatalyst={StaticResource BaseButtonStyle}}"
                 IsEnabled="{Binding CanOrganize}"
                 Clicked="GoBack_OnClicked" />
         </StackLayout>

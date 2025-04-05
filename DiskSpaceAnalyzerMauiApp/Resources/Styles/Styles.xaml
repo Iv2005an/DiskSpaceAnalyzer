@@ -11,8 +11,12 @@
     <Style x:Key="MediumLabelStyle" TargetType="Label">
         <Setter Property="FontSize" Value="Medium" />
     </Style>
-    <Style x:Key="InfoLabelStyle" TargetType="Label"
+    <Style x:Key="SubtitleLabelStyle" TargetType="Label">
+        <Setter Property="FontSize" Value="Small" />
+    </Style>
+    <Style x:Key="BodyLabelStyle" TargetType="Label"
            BasedOn="{StaticResource MediumLabelStyle}">
+        <Setter Property="FontSize" Value="Body"/>
         <Setter Property="Opacity" Value="0.5" />
     </Style>
 
@@ -36,19 +40,19 @@
         <Setter Property="FontSize" Value="16" />
         <Setter Property="CornerRadius" Value="5" />
         <Setter Property="MinimumWidthRequest" Value="84" />
-        <Setter Property="HeightRequest" Value="{OnPlatform MacCatalyst=26}" />
+        <Setter Property="HeightRequest" Value="26" />
     </Style>
     <Style x:Key="BaseButtonStyle" TargetType="Button"
-           BasedOn="{StaticResource ButtonStyle}">
+       BasedOn="{StaticResource ButtonStyle}">
         <Setter Property="BackgroundColor"
-                Value="{AppThemeBinding 
-                    Light={StaticResource ButtonBackgroundColorLight}, 
-                    Dark={StaticResource ButtonBackgroundColorDark}}" />
+            Value="{AppThemeBinding 
+                Light={StaticResource ButtonBackgroundColorLight}, 
+                Dark={StaticResource ButtonBackgroundColorDark}}" />
         <Setter Property="Shadow">
             <Shadow Brush="Black"
-                    Offset="0,0.5"
-                    Radius="2"
-                    Opacity="0.3" />
+                Offset="0,0.5"
+                Radius="2"
+                Opacity="0.3" />
         </Setter>
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
@@ -61,9 +65,27 @@
                     <VisualState x:Name="Pressed">
                         <VisualState.Setters>
                             <Setter Property="BackgroundColor"
-                                    Value="{AppThemeBinding 
-                                        Light={StaticResource ButtonPressedBackgroundColorLight}, 
-                                        Dark={StaticResource ButtonPressedBackgroundColorDark}}" />
+                                Value="{AppThemeBinding 
+                                    Light={StaticResource ButtonPressedBackgroundColorLight}, 
+                                    Dark={StaticResource ButtonPressedBackgroundColorDark}}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter Property="Opacity" Value="0.5" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+    <Style x:Key="BaseButtonWinStyle" TargetType="Button">
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup>
+                    <VisualState x:Name="Normal">
+                        <VisualState.Setters>
+                            <Setter Property="Opacity" Value="1" />
                         </VisualState.Setters>
                     </VisualState>
                     <VisualState x:Name="Disabled">
@@ -77,6 +99,10 @@
     </Style>
     <Style x:Key="DestructiveButtonStyle" TargetType="Button"
            BasedOn="{StaticResource BaseButtonStyle}">
+        <Setter Property="TextColor" Value="Red" />
+    </Style>
+    <Style x:Key="DestructiveButtonWinStyle" TargetType="Button"
+           BasedOn="{StaticResource BaseButtonWinStyle}">
         <Setter Property="TextColor" Value="Red" />
     </Style>
     <Style x:Key="PrimaryButtonStyle" TargetType="Button"
@@ -117,6 +143,25 @@
                                     Value="{AppThemeBinding 
                                         Light={StaticResource ButtonBackgroundColorLight}, 
                                         Dark={StaticResource ButtonBackgroundColorDark}}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+    <Style x:Key="PrimaryButtonWinStyle" TargetType="Button">
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup>
+                    <VisualState x:Name="Normal">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="{StaticResource PrimaryButtonColor}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor"
+                                Value="{Null}" />
                         </VisualState.Setters>
                     </VisualState>
                 </VisualStateGroup>

@@ -11,8 +11,8 @@
         {
             return new Window(new AppShell())
             {
-                MinimumWidth = 1200,
-                MinimumHeight = 800
+                MinimumWidth = 1000,
+                MinimumHeight = 600
             };
         }
     }
