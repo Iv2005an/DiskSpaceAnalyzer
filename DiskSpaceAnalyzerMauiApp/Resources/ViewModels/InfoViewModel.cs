@@ -21,12 +21,12 @@ public partial class InfoViewModel : ObservableObject, IQueryAttributable
     public List<string> InputIgnorePaths = [];
     public List<CategoryInfo> SelectedCategories = [];
 
-    [ObservableProperty] private ObservableCollection<OrganizeCategory> _organizeCategories = [];
+    [ObservableProperty] public partial ObservableCollection<OrganizeCategory> OrganizeCategories { get; set; } = [];
+    [ObservableProperty] public partial string? OutputPath { get; set; }
+    [ObservableProperty] public partial string RequiredDiskSpace { get; set; }
 
-    [ObservableProperty] private string _outputPath = "Выбирете папку сохранения";
-    [ObservableProperty] private string _requiredDiskSpace = "";
+    [ObservableProperty] public partial bool CanOrganize { get; set; }
 
-    [ObservableProperty] private bool _canOrganize;
 
     [RelayCommand]
     private async Task GetInfo()
@@ -34,13 +34,13 @@ public partial class InfoViewModel : ObservableObject, IQueryAttributable
         CanOrganize = false;
 
         OrganizeCategories = [];
-        OutputPath = "Выбирете папку сохранения";
+        OutputPath = null;
         RequiredDiskSpace = "";
 
         var dirs = InputPaths.Select(path => new DirectoryInfo(path)).ToList();
         var ignoreDirs = InputIgnorePaths.Select(path => new DirectoryInfo(path)).ToList();
         var categoryInfos = await DirectoryService.GetInfo(dirs, ignoreDirs);
-        categoryInfos = categoryInfos.Where(c => c.Count > 0).ToList();
+        categoryInfos = [.. categoryInfos.Where(c => c.Count > 0)];
         categoryInfos.Sort((a, b) => a.WeightPercentages < b.WeightPercentages ? 1 : -1);
         foreach (var organizeCategory in categoryInfos.Select(categoryInfo => new OrganizeCategory(categoryInfo)))
         {
@@ -70,9 +70,9 @@ public partial class InfoViewModel : ObservableObject, IQueryAttributable
     private void ComputeRequiredSpace()
     {
         var selectedCategories = OrganizeCategories.Where(oc => oc.Selected).ToList();
-        SelectedCategories = selectedCategories.Select(oc => oc.CategoryInfo).ToList();
+        SelectedCategories = [.. selectedCategories.Select(oc => oc.CategoryInfo)];
         var requiredSpaceData = selectedCategories.Sum(oc => oc.CategoryInfo.ClearWeight);
         RequiredDiskSpace = CategoryData.GetReadableWeight(requiredSpaceData);
-        CanOrganize = OutputPath != "Выбирете папку сохранения" && selectedCategories.Count > 0;
+        CanOrganize = OutputPath is not null && selectedCategories.Count > 0;
     }
 }

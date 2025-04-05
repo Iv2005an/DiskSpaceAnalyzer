@@ -91,7 +91,7 @@ public static class CategoryData
                 return weight.ToString("0 B"); // Byte
         }
 
-        readable = (readable / 1024);
+        readable /= 1024;
         return readable.ToString("0.### ") + suffix;
     }
 }

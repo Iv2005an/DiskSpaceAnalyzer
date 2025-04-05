@@ -20,16 +20,19 @@ public partial class AnalyzeViewModel : ObservableObject, IQueryAttributable
     public List<string> InputPaths = [];
     public List<string> InputIgnorePaths = [];
 
-    [ObservableProperty] private ObservableCollection<string> _analyzedPaths = [];
-    [ObservableProperty] private ObservableCollection<string> _ignoredPaths = [];
-    [ObservableProperty] private ObservableCollection<string> _errorPaths = [];
+    [ObservableProperty] public partial ObservableCollection<string> AnalyzedPaths { get; set; } = [];
 
-    [ObservableProperty] private double _analyzeProgressValue;
-    [ObservableProperty] private int _analyzedDirsCount;
-    [ObservableProperty] private int _allDirsCount;
+    [ObservableProperty] public partial ObservableCollection<string> IgnoredPaths { get; set; } = [];
 
-    [ObservableProperty] private bool _canOrganize;
+    [ObservableProperty] public partial ObservableCollection<string> ErrorPaths { get; set; } = [];
 
+    [ObservableProperty] public partial double AnalyzeProgressValue { get; set; }
+
+    [ObservableProperty] public partial int AnalyzedDirsCount { get; set; }
+
+    [ObservableProperty] public partial int AllDirsCount { get; set; }
+
+    [ObservableProperty] public partial bool CanOrganize { get; set; }
 
     [RelayCommand]
     private async Task Analyze()
@@ -58,11 +61,11 @@ public partial class AnalyzeViewModel : ObservableObject, IQueryAttributable
                     IgnoredPaths.Add(e.Dir.DirectoryPath);
                     break;
                 default:
-                {
-                    if (e.Level == ReportLevel.Error)
-                        ErrorPaths.Add($"{e.Message}: {e.Dir.DirectoryPath}");
-                    break;
-                }
+                    {
+                        if (e.Level == ReportLevel.Error)
+                            ErrorPaths.Add($"{e.Message}: {e.Dir.DirectoryPath}");
+                        break;
+                    }
             }
 
             AllDirsCount += e.Dir.DirectoryCount;

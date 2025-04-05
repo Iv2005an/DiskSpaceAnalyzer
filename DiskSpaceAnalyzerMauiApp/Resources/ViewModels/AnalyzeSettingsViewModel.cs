@@ -12,20 +12,21 @@ public partial class AnalyzeSettingsViewModel : ObservableObject
 {
     public AnalyzeSettingsViewModel() => Paths.CollectionChanged += (_, _) => IsCanAnalyze();
 
-    [ObservableProperty] private bool _repeatAnalyze;
-    [ObservableProperty] private bool _canAnalyze;
+    [ObservableProperty] public partial bool RepeatAnalyze { get; set; }
 
+    [ObservableProperty] public partial bool CanAnalyze { get; set; }
     public List<string> PathsToAnalyze { get; private set; } = [];
     public IProgress<ProgressReport>? Progress { private get; set; }
 
-    [ObservableProperty] private ObservableCollection<string> _paths = [];
-    [ObservableProperty] private ObservableCollection<string> _ignorePaths = [];
+    [ObservableProperty] public partial ObservableCollection<string> Paths { get; set; } = [];
 
-    [ObservableProperty] [NotifyCanExecuteChangedFor(nameof(DeletePathCommand))]
-    private string? _selectedPath;
+    [ObservableProperty] public partial ObservableCollection<string> IgnorePaths { get; set; } = [];
 
-    [ObservableProperty] [NotifyCanExecuteChangedFor(nameof(DeleteIgnorePathCommand))]
-    private string? _selectedIgnorePath;
+    [ObservableProperty, NotifyCanExecuteChangedFor(nameof(DeletePathCommand))]
+    public partial string? SelectedPath { get; set; }
+
+    [ObservableProperty, NotifyCanExecuteChangedFor(nameof(DeleteIgnorePathCommand))]
+    public partial string? SelectedIgnorePath { get; set; }
 
     [RelayCommand]
     private async Task AddPath(CancellationToken cancellationToken)
@@ -48,16 +49,16 @@ public partial class AnalyzeSettingsViewModel : ObservableObject
 
         if (dir.IsParentDirectoryOfAny(dirs))
         {
-            Paths = new(dirs.Where(d => !d.IsChildDirectoryOf(dir))
-                .Select(d => d.FullName).ToList());
+            Paths = [.. dirs.Where(d => !d.IsChildDirectoryOf(dir))
+                .Select(d => d.FullName).ToList()];
             Progress?.Report(new("Директории объединены"));
         }
 
         var ignoreDirs = IgnorePaths.Select(d => new DirectoryInfo(d)).ToList();
         if (dir.IsChildDirectoryOfAny(ignoreDirs))
         {
-            IgnorePaths = new(ignoreDirs.Where(d => !dir.IsChildDirectoryOf(d))
-                .Select(d => d.FullName).ToList());
+            IgnorePaths = [.. ignoreDirs.Where(d => !dir.IsChildDirectoryOf(d))
+                .Select(d => d.FullName).ToList()];
             Progress?.Report(new("Конфликтующие директории для игнорирования удалены"));
         }
 
@@ -85,16 +86,16 @@ public partial class AnalyzeSettingsViewModel : ObservableObject
 
         if (ignoreDir.IsParentDirectoryOfAny(ignoreDirs))
         {
-            IgnorePaths = new(ignoreDirs.Where(d => !d.IsChildDirectoryOf(ignoreDir))
-                .Select(d => d.FullName).ToList());
+            IgnorePaths = [.. ignoreDirs.Where(d => !d.IsChildDirectoryOf(ignoreDir))
+                .Select(d => d.FullName).ToList()];
             Progress?.Report(new("Директории объединены"));
         }
 
         var dirs = Paths.Select(d => new DirectoryInfo(d)).ToList();
         if (ignoreDir.IsParentDirectoryOfAny(dirs))
         {
-            Paths = new(dirs.Where(d => !d.IsChildDirectoryOf(ignoreDir))
-                .Select(d => d.FullName).ToList());
+            Paths = [.. dirs.Where(d => !d.IsChildDirectoryOf(ignoreDir))
+                .Select(d => d.FullName).ToList()];
             Progress?.Report(new("Конфликтующие директории удалены"));
         }
 
@@ -129,13 +130,13 @@ public partial class AnalyzeSettingsViewModel : ObservableObject
     [RelayCommand]
     private async Task PreparePaths()
     {
-        if (RepeatAnalyze) PathsToAnalyze = Paths.ToList();
+        if (RepeatAnalyze) PathsToAnalyze = [.. Paths];
         else
         {
             var analyzedPaths = (await DirectoryDatabase.GetDirectoriesAsync(
                     dir => Paths.Contains(dir.DirectoryPath)))
                 .Select(dir => dir.DirectoryPath).ToList();
-            PathsToAnalyze = Paths.Where(path => !analyzedPaths.Contains(path)).ToList();
+            PathsToAnalyze = [.. Paths.Where(path => !analyzedPaths.Contains(path))];
         }
     }
 

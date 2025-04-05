@@ -19,7 +19,7 @@ public partial class InfoPage : ContentPage
         {
             { "paths", _viewModel.InputPaths },
             { "ignorePaths", _viewModel.InputIgnorePaths },
-            { "outputDir", _viewModel.OutputPath },
+            { "outputDir", _viewModel.OutputPath ?? "" },
             { "categoryInfos", _viewModel.SelectedCategories },
         };
         await Shell.Current.GoToAsync("//OrganizePage", parameters);
