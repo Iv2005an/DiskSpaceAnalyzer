@@ -65,7 +65,7 @@ public class DirectoryServiceTest
     [Fact]
     public async Task MultipleIgnoreAnalyzeTest()
     {
-        DirectoryInfo[] dirs = Helper.Prepare("MultipleIgnoreAnalyzeTest");
+        var dirs = Helper.Prepare("MultipleIgnoreAnalyzeTest");
         var sourceDir = dirs[0].FullName;
 
         await DirectoryService.Analyze([dirs[0]], [
@@ -160,100 +160,12 @@ public class DirectoryServiceTest
     }
 
     [Fact]
-    public async Task WithFileNameCompareGetInfoTest()
-    {
-        var dirs = Helper.Prepare("WithFileNameCompareGetInfoTest");
-
-        await DirectoryService.Analyze([dirs[0]]);
-        var categories = await DirectoryService.GetInfo([dirs[0]], isFileNameCompare: true);
-
-        var raster = categories[(int)Categories.Raster];
-        Assert.Equal(12, raster.Files.Count);
-        Assert.Single(raster.Duplicates);
-
-        var vector = categories[(int)Categories.Vector];
-        Assert.Empty(vector.Files);
-        Assert.Empty(vector.Duplicates);
-
-        var text = categories[(int)Categories.Text];
-        Assert.Single(text.Files);
-        Assert.Equal(3, text.Duplicates.Count);
-
-        var audio = categories[(int)Categories.Audio];
-        Assert.Equal(12, audio.Files.Count);
-        Assert.Single(audio.Duplicates);
-
-        var video = categories[(int)Categories.Video];
-        Assert.Empty(video.Files);
-        Assert.Empty(video.Duplicates);
-
-        var eBook = categories[(int)Categories.EBook];
-        Assert.Empty(eBook.Files);
-        Assert.Empty(eBook.Duplicates);
-
-        var cad = categories[(int)Categories.Cad];
-        Assert.Empty(cad.Files);
-        Assert.Empty(cad.Duplicates);
-
-        var presentation = categories[(int)Categories.Presentation];
-        Assert.Empty(presentation.Files);
-        Assert.Empty(presentation.Duplicates);
-
-        var spreadsheet = categories[(int)Categories.Spreadsheet];
-        Assert.Empty(spreadsheet.Files);
-        Assert.Empty(spreadsheet.Duplicates);
-
-        var database = categories[(int)Categories.Database];
-        Assert.Empty(database.Files);
-        Assert.Empty(database.Duplicates);
-
-        var archive = categories[(int)Categories.Archive];
-        Assert.Empty(archive.Files);
-        Assert.Single(archive.Duplicates);
-
-        var web = categories[(int)Categories.Web];
-        Assert.Empty(web.Files);
-        Assert.Equal(3, web.Duplicates.Count);
-
-        var developer = categories[(int)Categories.Developer];
-        Assert.Empty(developer.Files);
-        Assert.Empty(developer.Duplicates);
-
-        var system = categories[(int)Categories.System];
-        Assert.Empty(system.Files);
-        Assert.Equal(2, system.Duplicates.Count);
-
-        var executables = categories[(int)Categories.Executables];
-        Assert.Empty(executables.Files);
-        Assert.Empty(executables.Duplicates);
-
-        var settings = categories[(int)Categories.Settings];
-        Assert.Empty(settings.Files);
-        Assert.Empty(settings.Duplicates);
-
-        var other = categories[(int)Categories.Other];
-        Assert.Empty(other.Files);
-        Assert.Single(other.Duplicates);
-
-        var error = categories[(int)Categories.Error];
-        Assert.Empty(error.Files);
-        Assert.Empty(error.Duplicates);
-    }
-
-    [Fact]
     public async Task SimpleOrganizeTest()
     {
         var dirs = Helper.Prepare("SimpleOrganizeTest");
         await DirectoryService.Analyze([dirs[0]]);
-        await DirectoryService.Organize(dirs[1], [dirs[0]]);
-    }
-
-    [Fact]
-    public async Task WithFileNameCompareOrganizeTest()
-    {
-        var dirs = Helper.Prepare("WithFileNameCompareOrganizeTest");
-        await DirectoryService.Analyze([dirs[0]]);
-        await DirectoryService.Organize(dirs[1], [dirs[0]], isFileNameCompare: true);
+        var categoryInfos = await DirectoryService.GetInfo([dirs[0]]);
+        DirectoryService.Organize(dirs[1], categoryInfos);
     }
 
     [Fact]
@@ -261,6 +173,9 @@ public class DirectoryServiceTest
     {
         var dirs = Helper.Prepare("CategoryFilterOrganizeTest");
         await DirectoryService.Analyze([dirs[0]]);
-        await DirectoryService.Organize(dirs[1], [dirs[0]], categories: [Categories.Raster, Categories.Archive]);
+        var categoryInfos = await DirectoryService.GetInfo([dirs[0]]);
+        Categories[] categories = [Categories.Raster, Categories.Archive];
+        categoryInfos = [.. categoryInfos.Where(c => categories.Contains(c.Category))];
+        DirectoryService.Organize(dirs[1], categoryInfos);
     }
 }

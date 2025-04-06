@@ -1,9 +1,9 @@
 namespace DiskSpaceAnalyzerLib.Models;
 
 public class FileProgressReport(
-    FileInfo file,
+    AnalyzedFile file,
     string message,
     ReportLevel level = ReportLevel.Info) : ProgressReport(message, level)
 {
-    public FileInfo File { get; } = file;
+    public AnalyzedFile File { get; } = file;
 }

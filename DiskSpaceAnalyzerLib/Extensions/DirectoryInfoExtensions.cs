@@ -14,9 +14,12 @@ public static class DirectoryInfoExtensions
         return false;
     }
 
-    public static bool IsChildDirectoryOfAny(this DirectoryInfo childDir, List<DirectoryInfo>? parentDirs) =>
-        parentDirs is not null && parentDirs.Any(childDir.IsChildDirectoryOf);
+    public static bool IsChildDirectoryOf(this DirectoryInfo childDir, List<DirectoryInfo> parentDirs) =>
+        parentDirs.Any(childDir.IsChildDirectoryOf);
 
-    public static bool IsParentDirectoryOfAny(this DirectoryInfo parentDir, List<DirectoryInfo>? childDirs) =>
-        childDirs is not null && childDirs.Any(childDir => childDir.IsChildDirectoryOf(parentDir));
+    public static bool IsParentDirectoryOf(this DirectoryInfo parentDir, DirectoryInfo childDir) =>
+        childDir.IsChildDirectoryOf(parentDir);
+
+    public static bool IsParentDirectoryOf(this DirectoryInfo parentDir, List<DirectoryInfo> childDirs) =>
+        childDirs.Any(childDir => childDir.IsChildDirectoryOf(parentDir));
 }

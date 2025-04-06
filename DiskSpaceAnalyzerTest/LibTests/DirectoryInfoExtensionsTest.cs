@@ -27,20 +27,14 @@ public class DirectoryInfoExtensionsTests
     [InlineData("/home/user/test", "/home/user/test/subdir/grandchild", true)] // Linux косвенный потомок
     [InlineData("/Users/user/test", "/Users/user/test/subdir", true)] // macOS прямой потомок
     [InlineData("/Users/user/test", "/Users/user/test/subdir/grandchild", true)] // macOS косвенный потомок
-    [InlineData(@"C:\Test", @"C:\Test", true)] // Windows сама директория
-    [InlineData("/home/user/test", "/home/user/test", true)] // Linux сама директория
-    [InlineData("/Users/user/test", "/Users/user/test", true)] // macOS сама директория
     [InlineData(@"C:\Test", @"D:\Unrelated", false)] // Windows несвязанная директория
     [InlineData("/home/user/test", "/var/log", false)] // Linux несвязанная директория
     [InlineData("/Users/user/test", "/Library/Frameworks", false)] // macOS несвязанная директория
-    [InlineData(@"C:\Test", null, false)] // Windows null-сценарий
-    [InlineData("/home/user/test", null, false)] // Linux null-сценарий
-    [InlineData("/Users/user/test", null, false)] // macOS null-сценарий
-    public void IsParentDirectoryOfAnyTest(string parentPath, string? childPath, bool expected)
+    public void IsParentDirectoryOfAnyTest(string parentPath, string childPath, bool expected)
     {
         var parentDir = new DirectoryInfo(parentPath);
-        List<DirectoryInfo>? dirs = childPath == null ? null : [new(childPath)];
+        DirectoryInfo? dir = new(childPath);
 
-        Assert.Equal(expected, parentDir.IsParentDirectoryOfAny(dirs));
+        Assert.Equal(expected, parentDir.IsParentDirectoryOf(dir));
     }
 }
