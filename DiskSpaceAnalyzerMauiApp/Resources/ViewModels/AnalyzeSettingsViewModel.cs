@@ -10,20 +10,19 @@ namespace DiskSpaceAnalyzerMauiApp.Resources.ViewModels;
 
 public partial class AnalyzeSettingsViewModel : ObservableObject
 {
-    public AnalyzeSettingsViewModel() => Paths.CollectionChanged += (_, _) => IsCanAnalyze();
+    public AnalyzeSettingsViewModel() => SourcePaths.CollectionChanged += (_, _) => IsCanAnalyze();
+
+    public IProgress<ProgressReport>? Progress { private get; set; }
+
+    [ObservableProperty] public partial bool CanAnalyze { get; set; }
 
     [ObservableProperty] public partial bool RepeatAnalyze { get; set; }
 
-    [ObservableProperty] public partial bool CanAnalyze { get; set; }
-    public List<string> PathsToAnalyze { get; private set; } = [];
-    public IProgress<ProgressReport>? Progress { private get; set; }
-
-    [ObservableProperty] public partial ObservableCollection<string> Paths { get; set; } = [];
-
+    [ObservableProperty] public partial ObservableCollection<string> SourcePaths { get; set; } = [];
     [ObservableProperty] public partial ObservableCollection<string> IgnorePaths { get; set; } = [];
 
     [ObservableProperty, NotifyCanExecuteChangedFor(nameof(DeletePathCommand))]
-    public partial string? SelectedPath { get; set; }
+    public partial string? SelectedSourcePath { get; set; }
 
     [ObservableProperty, NotifyCanExecuteChangedFor(nameof(DeleteIgnorePathCommand))]
     public partial string? SelectedIgnorePath { get; set; }
@@ -33,36 +32,42 @@ public partial class AnalyzeSettingsViewModel : ObservableObject
     {
         var path = await PickFolder(cancellationToken);
         if (path is null) return;
-        if (Paths.Contains(path))
+        if (SourcePaths.Contains(path))
         {
             Progress?.Report(new("Директория уже добавлена", ReportLevel.Error));
             return;
         }
 
         var dir = new DirectoryInfo(path);
-        var dirs = Paths.Select(d => new DirectoryInfo(d)).ToList();
-        if (dir.IsChildDirectoryOfAny(dirs))
+        var dirs = SourcePaths.Select(d => new DirectoryInfo(d)).ToList();
+        if (dir.IsChildDirectoryOf(dirs))
         {
             Progress?.Report(new("Директория является дочерней для одной из добавленных", ReportLevel.Error));
             return;
         }
 
-        if (dir.IsParentDirectoryOfAny(dirs))
+        if (dir.IsParentDirectoryOf(dirs))
         {
-            Paths = [.. dirs.Where(d => !d.IsChildDirectoryOf(dir))
-                .Select(d => d.FullName).ToList()];
+            SourcePaths =
+            [
+                .. dirs.Where(d => !d.IsChildDirectoryOf(dir))
+                    .Select(d => d.FullName).ToList()
+            ];
             Progress?.Report(new("Директории объединены"));
         }
 
         var ignoreDirs = IgnorePaths.Select(d => new DirectoryInfo(d)).ToList();
-        if (dir.IsChildDirectoryOfAny(ignoreDirs))
+        if (dir.IsChildDirectoryOf(ignoreDirs))
         {
-            IgnorePaths = [.. ignoreDirs.Where(d => !dir.IsChildDirectoryOf(d))
-                .Select(d => d.FullName).ToList()];
+            IgnorePaths =
+            [
+                .. ignoreDirs.Where(d => !dir.IsChildDirectoryOf(d))
+                    .Select(d => d.FullName).ToList()
+            ];
             Progress?.Report(new("Конфликтующие директории для игнорирования удалены"));
         }
 
-        Paths.Add(path);
+        SourcePaths.Add(path);
     }
 
     [RelayCommand]
@@ -78,24 +83,30 @@ public partial class AnalyzeSettingsViewModel : ObservableObject
 
         var ignoreDir = new DirectoryInfo(path);
         var ignoreDirs = IgnorePaths.Select(d => new DirectoryInfo(d)).ToList();
-        if (ignoreDir.IsChildDirectoryOfAny(ignoreDirs))
+        if (ignoreDir.IsChildDirectoryOf(ignoreDirs))
         {
             Progress?.Report(new("Директория является дочерней для одной из добавленных", ReportLevel.Error));
             return;
         }
 
-        if (ignoreDir.IsParentDirectoryOfAny(ignoreDirs))
+        if (ignoreDir.IsParentDirectoryOf(ignoreDirs))
         {
-            IgnorePaths = [.. ignoreDirs.Where(d => !d.IsChildDirectoryOf(ignoreDir))
-                .Select(d => d.FullName).ToList()];
+            IgnorePaths =
+            [
+                .. ignoreDirs.Where(d => !d.IsChildDirectoryOf(ignoreDir))
+                    .Select(d => d.FullName).ToList()
+            ];
             Progress?.Report(new("Директории объединены"));
         }
 
-        var dirs = Paths.Select(d => new DirectoryInfo(d)).ToList();
-        if (ignoreDir.IsParentDirectoryOfAny(dirs))
+        var dirs = SourcePaths.Select(d => new DirectoryInfo(d)).ToList();
+        if (ignoreDir.IsParentDirectoryOf(dirs))
         {
-            Paths = [.. dirs.Where(d => !d.IsChildDirectoryOf(ignoreDir))
-                .Select(d => d.FullName).ToList()];
+            SourcePaths =
+            [
+                .. dirs.Where(d => !d.IsChildDirectoryOf(ignoreDir))
+                    .Select(d => d.FullName).ToList()
+            ];
             Progress?.Report(new("Конфликтующие директории удалены"));
         }
 
@@ -112,11 +123,11 @@ public partial class AnalyzeSettingsViewModel : ObservableObject
     [RelayCommand(CanExecute = nameof(CanDeletePath))]
     private void DeletePath(string path)
     {
-        Paths.Remove(path);
-        SelectedPath = null;
+        SourcePaths.Remove(path);
+        SelectedSourcePath = null;
     }
 
-    private bool CanDeletePath() => SelectedPath is not null;
+    private bool CanDeletePath() => SelectedSourcePath is not null;
 
     [RelayCommand(CanExecute = nameof(CanDeleteIgnorePath))]
     private void DeleteIgnorePath(string path)
@@ -127,24 +138,11 @@ public partial class AnalyzeSettingsViewModel : ObservableObject
 
     private bool CanDeleteIgnorePath() => SelectedIgnorePath is not null;
 
-    [RelayCommand]
-    private async Task PreparePaths()
-    {
-        if (RepeatAnalyze) PathsToAnalyze = [.. Paths];
-        else
-        {
-            var analyzedPaths = (await DirectoryDatabase.GetDirectoriesAsync(
-                    dir => Paths.Contains(dir.DirectoryPath)))
-                .Select(dir => dir.DirectoryPath).ToList();
-            PathsToAnalyze = [.. Paths.Where(path => !analyzedPaths.Contains(path))];
-        }
-    }
-
-    partial void OnPathsChanged(ObservableCollection<string> value)
+    partial void OnSourcePathsChanged(ObservableCollection<string> value)
     {
         IsCanAnalyze();
         value.CollectionChanged += (_, _) => IsCanAnalyze();
     }
 
-    private void IsCanAnalyze() => CanAnalyze = Paths.Count > 0;
+    private void IsCanAnalyze() => CanAnalyze = SourcePaths.Count > 0;
 }

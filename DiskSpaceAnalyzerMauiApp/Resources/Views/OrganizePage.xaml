@@ -8,44 +8,52 @@
              Title="Выполняется организация">
     <Grid Margin="16,0,16,16">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <Border Grid.Row="0"
+        <Label Grid.Row="0" Text="Организовано:" Style="{StaticResource TitleLabelStyle}" />
+        <Border Grid.Row="1"
                 Margin="0,8"
                 Style="{StaticResource BorderStyle}">
             <CollectionView ItemsSource="{Binding OrganizedPaths, Mode=TwoWay}"
                             SelectionMode="None" />
         </Border>
-        <StackLayout Grid.Row="1"
-                     Margin="0,8,0,0"
-                     Spacing="10">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                <ProgressBar Progress="{Binding OrganizeProgressValue}" />
-                <Label Grid.Column="1"
+        <Label Grid.Row="2" Text="Ошибки:" Style="{StaticResource TitleLabelStyle}" />
+        <Border Grid.Row="3"
+                Margin="0,8"
+                Style="{StaticResource BorderStyle}">
+            <CollectionView ItemsSource="{Binding ErrorPaths, Mode=TwoWay}"
+                            SelectionMode="None" />
+        </Border>
+        <Grid Grid.Row="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <ProgressBar Progress="{Binding OrganizeProgressValue}" />
+            <Label Grid.Column="1"
                        Margin="8,0,0,0"
                        Style="{StaticResource MediumLabelStyle}">
-                    <Label.Text>
-                        <MultiBinding StringFormat="{}{0}/{1} {2:P2}">
-                            <Binding Path="OrganizedFileCount" />
-                            <Binding Path="AllFileCount" />
-                            <Binding Path="OrganizeProgressValue" />
-                        </MultiBinding>
-                    </Label.Text>
-                </Label>
-            </Grid>
-            <Button Text="Готово"
-                    HorizontalOptions="Fill"
-                    Style="{OnPlatform
-                        WinUI={StaticResource PrimaryButtonWinStyle},
-                        MacCatalyst={StaticResource PrimaryButtonStyle}}"
-                    IsEnabled="{Binding CanComplete}"
-                    Clicked="Complete_OnClicked" />
-        </StackLayout>
+                <Label.Text>
+                    <MultiBinding StringFormat="{}{0}/{1} {2:P2}">
+                        <Binding Path="OrganizedFileCount" />
+                        <Binding Path="AllFileCount" />
+                        <Binding Path="OrganizeProgressValue" />
+                    </MultiBinding>
+                </Label.Text>
+            </Label>
+        </Grid>
+        <Button Grid.Row="5"
+                Margin="8,0,0,0"
+                Text="Готово"
+                HorizontalOptions="Fill"
+                Style="{OnPlatform WinUI={StaticResource PrimaryButtonWinStyle},
+                                   MacCatalyst={StaticResource PrimaryButtonStyle}}"
+                IsEnabled="{Binding CanComplete}"
+                Clicked="Complete_OnClicked" />
     </Grid>
 </ContentPage>

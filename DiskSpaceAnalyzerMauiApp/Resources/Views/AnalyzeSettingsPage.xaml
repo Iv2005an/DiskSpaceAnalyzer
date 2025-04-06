@@ -22,8 +22,8 @@
         <Border Grid.Row="1"
                 Margin="0,8"
                 Style="{StaticResource BorderStyle}">
-            <ListView ItemsSource="{Binding Paths}"
-                      SelectedItem="{Binding SelectedPath, Mode=TwoWay}" />
+            <ListView ItemsSource="{Binding SourcePaths}"
+                      SelectedItem="{Binding SelectedSourcePath, Mode=TwoWay}" />
         </Border>
         <HorizontalStackLayout Grid.Row="2" Spacing="10" HorizontalOptions="End">
             <Button Text="Удалить"
@@ -31,7 +31,7 @@
                         WinUI={StaticResource DestructiveButtonWinStyle}, 
                         MacCatalyst={StaticResource DestructiveButtonStyle}}"
                     Command="{Binding DeletePathCommand}"
-                    CommandParameter="{Binding SelectedPath}" />
+                    CommandParameter="{Binding SelectedSourcePath}" />
             <Button Text="Добавить"
                     Style="{OnPlatform MacCatalyst={StaticResource BaseButtonStyle}}"
                     Command="{Binding AddPathCommand}" />
@@ -61,7 +61,7 @@
                      Spacing="5"
                      Margin="0,8,0,0">
             <Label Text="Повторить анализ?" VerticalTextAlignment="Center" />
-            <Switch IsToggled="{Binding RepeatAnalyze}" Margin="{OnPlatform WinUI='0,0,-110,0'}"/>
+            <Switch IsToggled="{Binding RepeatAnalyze}" Margin="{OnPlatform WinUI='0,0,-110,0'}" />
         </StackLayout>
         <StackLayout Grid.Row="7"
                      Margin="0,8,0,0">

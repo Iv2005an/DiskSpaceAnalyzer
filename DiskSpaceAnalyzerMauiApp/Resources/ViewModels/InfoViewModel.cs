@@ -23,10 +23,9 @@ public partial class InfoViewModel : ObservableObject, IQueryAttributable
 
     [ObservableProperty] public partial ObservableCollection<OrganizeCategory> OrganizeCategories { get; set; } = [];
     [ObservableProperty] public partial string? OutputPath { get; set; }
-    [ObservableProperty] public partial string RequiredDiskSpace { get; set; }
+    [ObservableProperty] public partial string? RequiredDiskSpace { get; set; }
 
     [ObservableProperty] public partial bool CanOrganize { get; set; }
-
 
     [RelayCommand]
     private async Task GetInfo()
@@ -35,15 +34,16 @@ public partial class InfoViewModel : ObservableObject, IQueryAttributable
 
         OrganizeCategories = [];
         OutputPath = null;
-        RequiredDiskSpace = "";
+        RequiredDiskSpace = null;
 
-        var dirs = InputPaths.Select(path => new DirectoryInfo(path)).ToList();
+        var sourceDirs = InputPaths.Select(path => new DirectoryInfo(path)).ToList();
         var ignoreDirs = InputIgnorePaths.Select(path => new DirectoryInfo(path)).ToList();
-        var categoryInfos = await DirectoryService.GetInfo(dirs, ignoreDirs);
+        var categoryInfos = await DirectoryService.GetInfo(sourceDirs, ignoreDirs);
         categoryInfos = [.. categoryInfos.Where(c => c.Count > 0)];
         categoryInfos.Sort((a, b) => a.WeightPercentages < b.WeightPercentages ? 1 : -1);
-        foreach (var organizeCategory in categoryInfos.Select(categoryInfo => new OrganizeCategory(categoryInfo)))
+        foreach (var categoryInfo in categoryInfos)
         {
+            var organizeCategory = new OrganizeCategory(categoryInfo);
             organizeCategory.SelectedChanged += _ => ComputeRequiredSpace();
             OrganizeCategories.Add(organizeCategory);
         }

@@ -14,7 +14,7 @@ public partial class OrganizeViewModel : ObservableObject, IQueryAttributable
         InputIgnorePaths = query["ignorePaths"] as List<string> ?? [];
         _outputDir = query["outputDir"] as string ?? "";
         _categoryInfos = query["categoryInfos"] as List<CategoryInfo> ?? [];
-        OrganizeCommand.ExecuteAsync(null);
+        OrganizeCommand.Execute(null);
     }
 
     public List<string> InputPaths = [];
@@ -22,17 +22,17 @@ public partial class OrganizeViewModel : ObservableObject, IQueryAttributable
     private string _outputDir = "";
     private List<CategoryInfo> _categoryInfos = [];
 
-    [ObservableProperty] private ObservableCollection<string> _organizedPaths = [];
+    [ObservableProperty] public partial ObservableCollection<string> OrganizedPaths { get; set; } = [];
+    [ObservableProperty] public partial ObservableCollection<string> ErrorPaths { get; set; } = [];
 
-    [ObservableProperty] private double _organizeProgressValue;
-    [ObservableProperty] private int _organizedFileCount;
-    [ObservableProperty] private int _allFileCount;
+    [ObservableProperty] public partial int OrganizedFileCount { get; set; }
+    [ObservableProperty] public partial int AllFileCount { get; set; }
+    [ObservableProperty] public partial double OrganizeProgressValue { get; set; }
 
-    [ObservableProperty] private bool _canComplete;
-
+    [ObservableProperty] public partial bool CanComplete { get; set; }
 
     [RelayCommand]
-    private async Task Organize()
+    private void Organize()
     {
         CanComplete = false;
 
@@ -42,17 +42,30 @@ public partial class OrganizeViewModel : ObservableObject, IQueryAttributable
         OrganizedFileCount = 0;
         AllFileCount = _categoryInfos.Sum(c => c.ClearCount);
 
-        var dirsToOrganize = InputPaths.Select(path => new DirectoryInfo(path)).ToList();
-        var ignoreDirsToOrganize = InputIgnorePaths.Select(path => new DirectoryInfo(path)).ToList();
         var progress = new Progress<FileProgressReport>();
         progress.ProgressChanged += (s, e) =>
         {
-            OrganizedPaths.Add($"{e.File.FullName} · {e.Message}");
+            switch (e)
+            {
+                case { Level: ReportLevel.Success, Message: "COPIED" }:
+                    OrganizedPaths.Add(e.File.File.FullName);
+                    break;
+                default:
+                {
+                    if (e.Level == ReportLevel.Error)
+                    {
+                        ErrorPaths.Add($"{e.Message}: {e.File.File.FullName}");
+                    }
+
+                    break;
+                }
+            }
+
             OrganizedFileCount += 1;
             OrganizeProgressValue = (double)OrganizedFileCount / AllFileCount;
         };
-        await DirectoryService.Organize(new(_outputDir), dirsToOrganize, ignoreDirsToOrganize,
-            categoryInfos: _categoryInfos, fileProgressReport: progress);
+        DirectoryService.Organize(new(_outputDir), _categoryInfos, progress);
+
         CanComplete = true;
     }
 }

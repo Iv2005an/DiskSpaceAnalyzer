@@ -25,12 +25,7 @@
                                      Spacing="10"
                                      MinimumHeightRequest="50">
                             <CheckBox IsChecked="{Binding Selected}"
-                                      Margin="{OnPlatform '20,0,0,0', WinUI='20,0,-80,0'}"/>
-                            <!-- <Rectangle WidthRequest="30" -->
-                            <!--            HeightRequest="30" -->
-                            <!--            RadiusX="3" -->
-                            <!--            RadiusY="3" -->
-                            <!--            Fill="{Binding Color}" /> -->
+                                      Margin="{OnPlatform '20,0,0,0', WinUI='20,0,-80,0'}" />
                             <Label Text="{Binding Name}"
                                    LineBreakMode="NoWrap"
                                    VerticalTextAlignment="Center"

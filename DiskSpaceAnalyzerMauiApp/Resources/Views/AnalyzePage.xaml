@@ -46,8 +46,8 @@
             </Grid.ColumnDefinitions>
             <ProgressBar Progress="{Binding AnalyzeProgressValue}" />
             <Label Grid.Column="1"
-                       Margin="8,0,0,0"
-                       Style="{StaticResource MediumLabelStyle}">
+                   Margin="8,0,0,0"
+                   Style="{StaticResource MediumLabelStyle}">
                 <Label.Text>
                     <MultiBinding StringFormat="{}{0}/{1}">
                         <Binding Path="AnalyzedDirsCount" />

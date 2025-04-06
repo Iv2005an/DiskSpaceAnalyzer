@@ -10,27 +10,23 @@ public partial class AnalyzeViewModel : ObservableObject, IQueryAttributable
 {
     public void ApplyQueryAttributes(IDictionary<string, object> query)
     {
-        _inputPathsToAnalyze = query["pathsToAnalyze"] as List<string> ?? [];
         InputPaths = query["paths"] as List<string> ?? [];
         InputIgnorePaths = query["ignorePaths"] as List<string> ?? [];
+        _repeatAnalyze = (bool)query["repeatAnalyze"];
         AnalyzeCommand.ExecuteAsync(null);
     }
 
-    private List<string> _inputPathsToAnalyze = [];
+    private bool _repeatAnalyze;
     public List<string> InputPaths = [];
     public List<string> InputIgnorePaths = [];
 
     [ObservableProperty] public partial ObservableCollection<string> AnalyzedPaths { get; set; } = [];
-
     [ObservableProperty] public partial ObservableCollection<string> IgnoredPaths { get; set; } = [];
-
     [ObservableProperty] public partial ObservableCollection<string> ErrorPaths { get; set; } = [];
 
-    [ObservableProperty] public partial double AnalyzeProgressValue { get; set; }
-
     [ObservableProperty] public partial int AnalyzedDirsCount { get; set; }
-
     [ObservableProperty] public partial int AllDirsCount { get; set; }
+    [ObservableProperty] public partial double AnalyzeProgressValue { get; set; }
 
     [ObservableProperty] public partial bool CanOrganize { get; set; }
 
@@ -45,10 +41,10 @@ public partial class AnalyzeViewModel : ObservableObject, IQueryAttributable
 
         AnalyzeProgressValue = 0;
         AnalyzedDirsCount = 0;
-        AllDirsCount = 1;
+        AllDirsCount = InputPaths.Count;
 
-        var dirsToAnalyze = _inputPathsToAnalyze.Select(path => new DirectoryInfo(path)).ToList();
-        var ignoreDirsToAnalyze = InputIgnorePaths.Select(path => new DirectoryInfo(path)).ToList();
+        var sourceDirs = InputPaths.Select(path => new DirectoryInfo(path)).ToList();
+        var ignoreDirs = InputIgnorePaths.Select(path => new DirectoryInfo(path)).ToList();
         var progress = new Progress<DirectoryProgressReport>();
         progress.ProgressChanged += (s, e) =>
         {
@@ -61,18 +57,21 @@ public partial class AnalyzeViewModel : ObservableObject, IQueryAttributable
                     IgnoredPaths.Add(e.Dir.DirectoryPath);
                     break;
                 default:
+                {
+                    if (e.Level == ReportLevel.Error)
                     {
-                        if (e.Level == ReportLevel.Error)
-                            ErrorPaths.Add($"{e.Message}: {e.Dir.DirectoryPath}");
-                        break;
+                        ErrorPaths.Add($"{e.Message}: {e.Dir.DirectoryPath}");
                     }
+
+                    break;
+                }
             }
 
             AllDirsCount += e.Dir.DirectoryCount;
             AnalyzedDirsCount += 1;
             AnalyzeProgressValue = (double)AnalyzedDirsCount / AllDirsCount;
         };
-        await DirectoryService.Analyze(dirsToAnalyze, ignoreDirsToAnalyze, progress);
+        await DirectoryService.Analyze(sourceDirs, ignoreDirs, _repeatAnalyze, progress);
         CanOrganize = true;
     }
 }
