@@ -165,7 +165,7 @@ public class DirectoryServiceTest
         var dirs = Helper.Prepare("SimpleOrganizeTest");
         await DirectoryService.Analyze([dirs[0]]);
         var categoryInfos = await DirectoryService.GetInfo([dirs[0]]);
-        DirectoryService.Organize(dirs[1], categoryInfos);
+        await DirectoryService.Organize(dirs[1], categoryInfos);
     }
 
     [Fact]
@@ -176,6 +176,6 @@ public class DirectoryServiceTest
         var categoryInfos = await DirectoryService.GetInfo([dirs[0]]);
         Categories[] categories = [Categories.Raster, Categories.Archive];
         categoryInfos = [.. categoryInfos.Where(c => categories.Contains(c.Category))];
-        DirectoryService.Organize(dirs[1], categoryInfos);
+        await DirectoryService.Organize(dirs[1], categoryInfos);
     }
 }
