@@ -142,29 +142,32 @@ public static class DirectoryService
         return categoryInfos;
     }
 
-    public static void Organize(
+    public static async Task Organize(
         DirectoryInfo outputDir,
         List<CategoryInfo> categoryInfos,
         IProgress<FileProgressReport>? fileProgressReport = null)
     {
-        DirectoryInfo organizeOutputDir =
-            new(Path.Combine(outputDir.FullName, $"Organized Data {DateTime.Now:yyyy-MM-dd HH.mm.ss}"));
-
-        foreach (var categoryInfo in categoryInfos)
+        await Task.Run(() =>
         {
-            DirectoryInfo categoryOutputDir =
-                new(Path.Combine(organizeOutputDir.FullName, categoryInfo.Category.ToString()));
-            foreach (var analyzedFile in categoryInfo.Files)
-                FileService.Copy(
-                    analyzedFile,
-                    categoryOutputDir,
-                    fileProgressReport);
-            foreach (var duplicate in categoryInfo.Duplicates)
-                FileService.Copy(
-                    duplicate[0],
-                    categoryOutputDir,
-                    fileProgressReport);
-        }
+            DirectoryInfo organizeOutputDir =
+                new(Path.Combine(outputDir.FullName, $"Organized Data {DateTime.Now:yyyy-MM-dd HH.mm.ss}"));
+
+            foreach (var categoryInfo in categoryInfos)
+            {
+                DirectoryInfo categoryOutputDir =
+                    new(Path.Combine(organizeOutputDir.FullName, categoryInfo.Category.ToString()));
+                foreach (var analyzedFile in categoryInfo.Files)
+                    FileService.Copy(
+                        analyzedFile,
+                        categoryOutputDir,
+                        fileProgressReport);
+                foreach (var duplicate in categoryInfo.Duplicates)
+                    FileService.Copy(
+                        duplicate[0],
+                        categoryOutputDir,
+                        fileProgressReport);
+            }
+        });
     }
 
     public static bool CheckAvailableDiskSpace(DirectoryInfo dir, List<CategoryInfo> categoryInfos)

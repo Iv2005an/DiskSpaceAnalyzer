@@ -14,7 +14,7 @@ public partial class OrganizeViewModel : ObservableObject, IQueryAttributable
         InputIgnorePaths = query["ignorePaths"] as List<string> ?? [];
         _outputDir = query["outputDir"] as string ?? "";
         _categoryInfos = query["categoryInfos"] as List<CategoryInfo> ?? [];
-        OrganizeCommand.Execute(null);
+        OrganizeCommand.ExecuteAsync(null);
     }
 
     public List<string> InputPaths = [];
@@ -32,7 +32,7 @@ public partial class OrganizeViewModel : ObservableObject, IQueryAttributable
     [ObservableProperty] public partial bool CanComplete { get; set; }
 
     [RelayCommand]
-    private void Organize()
+    private async Task Organize()
     {
         CanComplete = false;
 
@@ -64,7 +64,7 @@ public partial class OrganizeViewModel : ObservableObject, IQueryAttributable
             OrganizedFileCount += 1;
             OrganizeProgressValue = (double)OrganizedFileCount / AllFileCount;
         };
-        DirectoryService.Organize(new(_outputDir), _categoryInfos, progress);
+        await DirectoryService.Organize(new(_outputDir), _categoryInfos, progress);
 
         CanComplete = true;
     }
