@@ -20,7 +20,6 @@ public class AnalyzedFile
             Weight = value.Length;
             Category = value.GetCategory();
             EditTimeUtc = value.LastWriteTimeUtc;
-            Checksum = value.GetChecksum();
         }
     }
 
@@ -40,8 +39,6 @@ public class AnalyzedFile
     [Column("category")] public Categories Category { get; init; }
 
     [Column("edit_time")] public DateTime EditTimeUtc { get; init; }
-
-    [Column("checksum")] public string Checksum { get; init; } = "";
 
     public override string ToString() => File.FullName;
 }

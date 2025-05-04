@@ -15,7 +15,7 @@ public static class FileService
             var fileDuplicates = files.FindAll(
                 file => file.Category == analyzedFile.Category
                         && file.Weight == analyzedFile.Weight
-                        && file.Checksum == analyzedFile.Checksum
+                        && file.EditTimeUtc == analyzedFile.EditTimeUtc
                         && file.File.CompareFiles(analyzedFile.File));
             if (fileDuplicates.Count <= 1) continue;
             duplicates.Add(fileDuplicates);
