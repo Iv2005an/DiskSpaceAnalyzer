@@ -26,11 +26,13 @@ public partial class InfoViewModel : ObservableObject, IQueryAttributable
     [ObservableProperty] public partial string? RequiredDiskSpace { get; set; }
 
     [ObservableProperty] public partial bool CanOrganize { get; set; }
+    [ObservableProperty] public partial bool IsLoading { get; set; }
 
     [RelayCommand]
     private async Task GetInfo()
     {
         CanOrganize = false;
+        IsLoading = true;
 
         OrganizeCategories = [];
         OutputPath = null;
@@ -49,6 +51,7 @@ public partial class InfoViewModel : ObservableObject, IQueryAttributable
         }
 
         ComputeRequiredSpace();
+        IsLoading = false;
     }
 
     [RelayCommand]
