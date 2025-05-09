@@ -19,7 +19,7 @@ public static class FileService
                         && file.File.CompareFiles(analyzedFile.File));
             if (fileDuplicates.Count <= 1) continue;
             duplicates.Add(fileDuplicates);
-            files.RemoveAll(file => fileDuplicates.Contains(file));
+            files.RemoveAll(fileDuplicates.Contains);
             i--;
         }
 
