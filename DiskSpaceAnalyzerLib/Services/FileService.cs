@@ -46,7 +46,7 @@ public static class FileService
         }
         catch (DirectoryNotFoundException)
         {
-            fileProgressReport?.Report(new(analyzedFile, "FILE NOT FOUND", ReportLevel.Error));
+            fileProgressReport?.Report(new(analyzedFile, "DIRECTORY NOT FOUND", ReportLevel.Error));
         }
         catch (FileNotFoundException)
         {
